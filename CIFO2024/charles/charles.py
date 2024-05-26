@@ -5,28 +5,23 @@ from copy import copy
 
 class Individual:
     # we always initialize
-    def __init__(self, representation=None, size=None, valid_set=None, repetition=True):
+    def __init__(self, representation=None, size=None, valid_set=None, repetition=True, init_func=None):
 
         if representation is None:
-            if repetition:
-                # individual will be chosen from the valid_set with a specific size
-                self.representation = [choice(valid_set) for i in range(size)]
+            if init_func is None:
+                if repetition:
+                    # individual will be chosen from the valid_set with a specific size
+                    self.representation = [choice(valid_set) for i in range(size)]
+                else:
+                    self.representation = sample(valid_set, size)
             else:
-                self.representation = sample(valid_set, size)
+                self.representation = init_func()
 
         # if we pass an argument like Individual(my_path)
         else:
             self.representation = representation
 
         # fitness will be assigned to the individual
-        self.fitness = self.get_fitness()
-
-    def __init__(self, representation=None, init_func=None):
-        if representation is None:
-            self.representation = init_func()
-        else:
-            self.representation = representation
-
         self.fitness = self.get_fitness()
 
     # methods for the class
@@ -49,7 +44,7 @@ class Individual:
         self.representation[position] = value
 
     def __repr__(self):
-        return f" Fitness: {self.fitness}"
+        return f" Fitness: {self.fitness}, Rep: {self.representation}"
 
 
 class Population:
@@ -65,20 +60,14 @@ class Population:
 
         # appending the population with individuals
         for _ in range(size):
-            if kwargs.get("init_func") is not None:
-                self.individuals.append(
-                    Individual(
-                        init_func=kwargs["init_func"]
-                    )
+            self.individuals.append(
+                Individual(
+                    size=kwargs.get("sol_size"),
+                    valid_set=kwargs.get("valid_set"),
+                    repetition=kwargs.get("repetition"),
+                    init_func=kwargs.get("init_func")
                 )
-            else:
-                self.individuals.append(
-                    Individual(
-                        size=kwargs["sol_size"],
-                        valid_set=kwargs["valid_set"],
-                        repetition=kwargs["repetition"]
-                    )
-                )
+            )
 
     def evolve(self, gens, xo_prob, mut_prob, select, xo, mutate, elitism):
         # gens = 100

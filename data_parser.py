@@ -9,13 +9,16 @@ def parse_single_line(line):
     return segments
 
 
-with open(FILE_PATH, 'r') as f:
-    next(f)  # Skip the first line
-    lines = f.readlines()
-    for line in lines:
-        if line == '\n':
-            break
+def parse_file(file_path):
+    with open(FILE_PATH, 'r') as f:
+        next(f)  # Skip the first line
+        lines = f.readlines()
+        for line in lines:
+            if line == '\n':
+                break
 
-        data.append(parse_single_line(line))
+            data.append(parse_single_line(line))
 
-print(data)
+    return data
+
+print(parse_file(FILE_PATH))
