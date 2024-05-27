@@ -6,10 +6,9 @@ from charles.mutation import swap_mutation
 from charles.xo import cycle_xo
 import math
 
-
+d0 = ['D0', 'd', '40.0', '50.0', '0.0', '0.0', '1236.0', '0.0', '0']
 data = [
-    #0
-    ['D0', 'd', '40.0', '50.0', '0.0', '0.0', '1236.0', '0.0', '0'],
+    
     #1
     ['S0', 'f', '40.0', '50.0', '0.0', '0.0', '1236.0', '0.0', '0'],
     #2
@@ -19,7 +18,7 @@ data = [
     #4
     ['C24', 'cd', '25.0', '50.0', '-20.0', '0.0', '1131.0', '180.0', 'C65'],
     #5
-    ['C57', 'cd', '40.0', '15.0', '-60.0', '60.0', '1063.0', '90.0', 'C98'],
+    ['C57', 'cd', '40.0', '15.0', '-60.0', '989.0', '1063.0', '90.0', 'C98'],
     #6
     ['C65', 'cp', '48.0', '40.0', '20.0', '67.0', '139.0', '90.0', 'C24'],
     #7
@@ -36,16 +35,26 @@ def get_fitness_time(self):
     current_time = 0.0
     delivery_first = 100000
     battery = 77.75
-
+    
+    
     for idx, rep in enumerate(self.representation):
         ready_time = float(data[rep][5])
         due_date = float(data[rep][6])
         service_time = float(data[rep][7])
         
         d = 0
+
         if delivery_first != 100000:
             distance = (float(data[rep][2])-float(data[delivery_first][2]))**2 
             distance += (float(data[rep][3])-float(data[delivery_first][3]))**2
+            distance = math.sqrt(distance)
+            d = distance
+            battery -= distance
+            current_time += distance
+
+        else: 
+            distance = (float(data[rep][2])-float(d0[2]))**2 
+            distance += (float(data[rep][3])-float(d0[3]))**2
             distance = math.sqrt(distance)
             d = distance
             battery -= distance
@@ -61,12 +70,25 @@ def get_fitness_time(self):
 
         if service_time != 0.0:
             current_time += service_time
+
         time_charging = 0
+
         if 'S' in data[rep][0]:
             time_charging = (77.75 - battery)*3.47
             current_time += time_charging
-
+        
         #print(rep,' ', delivery_first, ' ', d, ' ', current_time, ' ', time_charging, ' ', service_time, ' ', ready_time)
+    
+    
+    distance = (float(data[rep][2])-float(d0[2]))**2 
+    distance += (float(data[rep][3])-float(d0[3]))**2
+    distance = math.sqrt(distance)
+    d = distance
+    battery -= distance
+    current_time += distance
+
+    if float(d0[6]) < current_time:
+        time_error = True
 
     if time_error:
         return 1000000000
@@ -85,21 +107,40 @@ def get_fitness_vehicle_battery(self):
     battery_now = battery
 
     for idx, rep in enumerate(self.representation):
+        distance = 0
         if battery_consume !=0 :
             distance = (float(data[rep][2])-float(data[delivery_first][2]))**2 
             distance += (float(data[rep][3])-float(data[delivery_first][3]))**2
             distance = math.sqrt(distance)
-            battery_consume += distance*battery_consumption
-        if battery_now-battery_consume < 0 :
+            battery_now -= distance*battery_consumption
+        else:
+            distance = (float(data[rep][2])-float(d0[2]))**2 
+            distance += (float(data[rep][3])-float(d0[3]))**2
+            distance = math.sqrt(distance)
+            battery_now -= distance*battery_consumption
+        
+        if battery_now < 0 :
             battery_error = True
+            
             break
         station_type = data[rep][0]
+       
         if 'S' in station_type:
             battery_now = battery
-
+            
         delivery_first = rep
+    
+    
+    distance = (float(data[rep][2])-float(d0[2]))**2 
+    distance += (float(data[rep][3])-float(d0[3]))**2
+    distance = math.sqrt(distance)
+    battery_now -= distance*battery_consumption
+    
+    if battery_now< 0:
+        battery_error = True
 
     if battery_error:
+        
         return 100000000
 
     return 1
@@ -154,7 +195,7 @@ def get_neighbours(self):
 Individual.get_fitness = get_fitness
 Individual.get_neighbours = get_neighbours
 
-P = Population(size=20, optim="min", sol_size=len(data),
+P = Population(size=40, optim="min", sol_size=len(data),
                  valid_set=[i for i in range(len(data))], repetition = False)
 
 P.evolve(gens=100, xo_prob=0.9, mut_prob=0.15, select=tournament_sel,

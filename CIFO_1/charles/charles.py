@@ -6,7 +6,7 @@ from copy import copy
 class Individual:
     # we always initialize
     def __init__(self, representation=None, size=None, valid_set=None, repetition=True):
-        
+
         if representation is None:
             if repetition:
                 # individual will be chosen from the valid_set with a specific size
@@ -20,8 +20,6 @@ class Individual:
 
         # fitness will be assigned to the individual
         self.fitness = self.get_fitness()
-        print('----------')
-        print(representation, ' ', self.fitness)
 
     # methods for the class
     def get_fitness(self):
@@ -48,10 +46,10 @@ class Individual:
 
 class Population:
     def __init__(self, size, optim, **kwargs):
-        
+
         # population size
         self.size = size
-        
+
         # defining the optimization problem as a minimization or maximization problem
         self.optim = optim
 
@@ -66,7 +64,6 @@ class Population:
                     repetition=kwargs["repetition"]
                 )
             )
-            
     def evolve(self, gens, xo_prob, mut_prob, select, xo, mutate, elitism):
         # gens = 100
         for i in range(gens):
@@ -78,7 +75,7 @@ class Population:
                 elif self.optim == "min":
                     elite = copy(min(self.individuals, key=attrgetter('fitness')))
 
-                new_pop.append(elite)
+                #new_pop.append(elite)
 
             while len(new_pop) < self.size:
                 # selection
@@ -99,12 +96,24 @@ class Population:
                 if len(new_pop) < self.size:
                     new_pop.append(Individual(representation=offspring2))
 
+            if elitism:
+                if self.optim == "max":
+                    worst = min(new_pop, key=attrgetter('fitness'))
+                    if elite.fitness > worst.fitness:
+                        new_pop.pop(new_pop.index(worst))
+                        new_pop.append(elite)
+                if self.optim == "min":
+                    worst = max(new_pop, key=attrgetter('fitness'))
+                    if elite.fitness < worst.fitness:
+                        new_pop.pop(new_pop.index(worst))
+                        new_pop.append(elite)
+
+
             self.individuals = new_pop
 
             if self.optim == "max":
                 print(f"Best individual of gen #{i + 1}: {max(self, key=attrgetter('fitness'))}")
             elif self.optim == "min":
-               
                 print(f"Best individual of gen #{i + 1}: {min(self, key=attrgetter('fitness'))}")
 
 
