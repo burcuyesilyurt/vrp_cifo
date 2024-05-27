@@ -3,6 +3,7 @@ from data.tsp_data import cities, distance_matrix
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
 from charles.xo import cycle_xo, pmx
+import math
 
 data = [
     #0
@@ -35,12 +36,74 @@ def get_fitness_number_of_vehicles(self):
     pass
 
 def get_fitness_time(self):
-    pass
+    time_error = False
+    current_time = 0.0
+    delivery_first = 1000
+    for idx, rep in enumerate(self.representation):
+        ready_time = float(data[rep][5])
+        due_date = float(data[rep][6])
+        service_time = float(data[rep][7])
+        
+
+        if delivery_first != 1000:
+            distance = (float(data[rep][2])-float(data[delivery_first][2]))**2 
+            distance += (float(data[rep][3])-float(data[delivery_first][3]))**2
+            distance = math.sqrt(distance)
+            current_time += distance
+
+        if ready_time > current_time:
+            current_time = ready_time
+
+        if due_date < current_time:
+            time_error = True
+            print(self.representation)
+            print('error')
+            print(ready_time, service_time, due_date)
+            print(current_time)
+
+        delivery_first = rep
+
+        if service_time != 0.0:
+            current_time += service_time
+
+    if time_error:
+        return -500
+    
+    else:
+        return 1
+    
 
 def get_fitness_vehicle_battery(self):
-    pass
+    battery = 77.75
+    battery_consume = 0
+    delivery_first = 1000
+    battery_consumption = 1
+    battery_error =False
+    battery_now = battery
+
+    for idx, rep in enumerate(self.representation):
+        if battery_consume !=0 :
+            distance = (float(data[rep][2])-float(data[delivery_first][2]))**2 
+            distance += (float(data[rep][3])-float(data[delivery_first][3]))**2
+            distance = math.sqrt(distance)
+            battery_consume += distance*battery_consumption
+        if battery_now-battery_consume < 0 :
+            battery_error = True
+            break
+        station_type = data[rep][0]
+        if 'S' in station_type:
+            battery_now = battery
+
+        delivery_first = rep
+
+    if battery_error:
+        return -500
+
+    return 1
+
 
 def get_fitness_pickup_delivery_order(self):
+    
     pickup_violation = False
     for idx, rep in enumerate(self.representation):
         if data[rep][0] == "cp":
@@ -62,7 +125,7 @@ def get_fitness(self):
     if self.representation[0] != 0:
         return -1000
 
-    return get_fitness_pickup_delivery_order(self)
+    return get_fitness_vehicle_battery(self)
 
 # Monkey patching
 Individual.get_fitness = get_fitness
