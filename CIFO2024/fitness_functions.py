@@ -7,17 +7,20 @@ def get_fitness(data):
         #TODO implement the fitness function considering the different objectives
         # We can try weighted sum or pareto front here
         # Penalize if the first point is not the depot
+        fitness_time = 0
         for route in individual.representation:
             if not route:
                 continue
 
             if route[0] != 0:
-                return -1000
+                return 10000000
 
             if has_pickup_violation(route, data):
-                return -500
+                return 500000000
 
-        return 1
+            fitness_time += get_fitness_time(route, data)
+
+        return fitness_time
 
     return get_overall_fitness
 
@@ -73,7 +76,7 @@ def get_fitness_time(route, data):
         time_error = True
 
     if time_error:
-        return 1000000000
+        return 1000000
 
     else:
         return current_time

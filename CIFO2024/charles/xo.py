@@ -163,7 +163,7 @@ def order_xo(parent1, parent2):
     #flat_offspring1 = order_crossover(flat_parent1, flat_parent2)
     #flat_offspring2 = order_crossover(flat_parent2, flat_parent1)
 
-    flat_offspring1, flat_offspring2 = single_point_xo(flat_parent1, flat_parent2)
+    flat_offspring1, flat_offspring2 = pmx(flat_parent1, flat_parent2)
 
     # Reconstruct routes for both offspring
     offspring1 = reconstruct_routes(flat_offspring1)

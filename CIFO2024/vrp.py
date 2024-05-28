@@ -29,15 +29,31 @@ data = [
     ['C99', 'cp', '30.0', '50.0', '10.0', '0.0', '1136.0', '0.0', 'C20']
 ]
 
+data = [
+    #0
+    ['D0', 'd', '40.0', '50.0', '0.0', '0.0', '1236.0', '0.0', '0'],
+    #1
+    ['C20', 'cd', '30.0', '50.0', '-10.0', '0.0', '1136.0', '90.0', 'C99'],
+    #2
+    ['C24', 'cd', '25.0', '50.0', '-20.0', '0.0', '1131.0', '90.0', 'C65'],
+    #3
+    ['C57', 'cd', '40.0', '15.0', '-60.0', '989.0', '1069.0', '90.0', 'C98'],
+    #4
+    ['C65', 'cp', '48.0', '40.0', '20.0', '67.0', '139.0', '90.0', 'C24'],
+    #5
+    ['C98', 'cp', '58.0', '75.0', '60.0', '0.0', '1115.0', '90.0', 'C57'],
+    #6
+    ['C99', 'cp', '30.0', '50.0', '10.0', '0.0', '1136.0', '0.0', 'C20']
+]
+
 # Max number of vehicles = number of pick ups
 max_vehicles = len(list(filter(lambda e: e[1] == "cp", data)))
-max_vehicles = 2
 
 # Monkey patching
 Individual.get_fitness = get_fitness(data)
 
 if __name__ == "__main__":
-    P = Population(size=20, optim="max", init_func=random_initialization(data, max_vehicles))
+    P = Population(size=20, optim="min", init_func=random_initialization(data, max_vehicles))
 
     # TODO change mut prob when mutation is implemented for our structure
     P.evolve(gens=100,
