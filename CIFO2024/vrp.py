@@ -4,7 +4,7 @@ from random import sample
 from charles.charles import Population, Individual
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
-from charles.xo import cycle_xo, pmx, order_xo
+from charles.xo import cycle_xo, pmx, vrp_pmx
 from fitness_functions import get_fitness
 from initializations import random_initialization
 
@@ -60,6 +60,6 @@ if __name__ == "__main__":
              xo_prob=1,
              mut_prob=0,
              select=tournament_sel,
-             xo=order_xo,
+             xo=vrp_pmx,
              mutate=inversion_mutation,
              elitism=True)
