@@ -1,53 +1,71 @@
-import seaborn as sns
 import matplotlib.pyplot as plt
-from copy import copy
-'''
-def fitness(number):
-    return number**2
-    #return "{0:04b}".format(number).count("1")
-
-# plotting the fitness landscape of the int_bin problem
-sns.lineplot(y=[fitness(i) for i in range(1, 16)], x=[i for i in range (1,16)])
-plt.show()
+from read_data import data, d0
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import math
 
 
+def euclidean_distance(a, b):
+    ax, ay = float(a[2]), float(a[3])
+    bx, by = float(b[2]), float(b[3])
+    return math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
 
-sol = [0,0,0,0]
 
-n = [copy(sol) for _ in range(len(sol))]
+def plot_vrp_solution(solution, all_points):
+    x_coords = [all_points[i][2] for i in solution]
+    y_coords = [all_points[i][3] for i in solution]
 
-for i, ne in enumerate(n):
-    if ne[i] == 1:
-        ne[i] = 0
-    elif ne[i] == 0:
-        ne[i] = 1
+    fig, ax = plt.subplots(figsize=(12, 8))
 
-print(n)
+    ax.plot(x_coords, y_coords, 'o--', linewidth=2, markersize=8, label='Path', color='black')
 
-'''
+    def add_image(ax, img, xy, zoom=0.1):
+        imagebox = OffsetImage(img, zoom=zoom)
+        ab = AnnotationBbox(imagebox, xy, frameon=False)
+        ax.add_artist(ab)
 
-# simulated annealing parameters
+    depot_img = plt.imread('depot.png')
+    battery_img = plt.imread('battery.png')
+    box_img = plt.imread('box.png')
 
-def plot_c(c, alpha, threshold):
-    c_list = [c]
-    while c > threshold:
-        c = c * alpha
-        c_list.append(c)
-    plt.plot(c_list)
+    def get_image_type(point):
+        if point[1] == 'f':
+            return battery_img
+        elif point[1] == 'd':
+            return depot_img
+        else:
+            return box_img
+
+    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+        img = get_image_type(all_points[solution[i]])
+        if img is not depot_img:
+            add_image(ax, img, (x, y), zoom=0.1)
+
+    for i in range(len(x_coords)-1):
+        ax.annotate('', xy=(x_coords[i+1], y_coords[i+1]), xytext=(x_coords[i], y_coords[i]),
+                    arrowprops=dict(arrowstyle='->', color='black', lw=2))
+
+    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+        img = get_image_type(all_points[solution[i]])
+        if img is depot_img:
+            add_image(ax, img, (x, y), zoom=0.1)
+
+    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+        ax.text(x, y, f'{solution[i]}', fontsize=12, ha='right', va='bottom')
+
+    ax.set_title('VRP Solution Path', fontsize=16)
+    ax.set_xlabel('X Coordinate', fontsize=14)
+    ax.set_ylabel('Y Coordinate', fontsize=14)
+
+    ax.legend()
+    ax.grid(True)
+    ax.set_facecolor('#f7f7f7')
+
     plt.show()
-    print(c_list)
-
-plot_c(10,0.95,0.05)
 
 
 
+solution = [0, 7, 3, 1, 6, 5, 2, 8, 4]
+all_points = [d0] + data
 
-
-
-
-
-
-
-
-
-
+plot_vrp_solution(solution, all_points)

@@ -19,7 +19,12 @@ class Individual:
 
         # if we pass an argument like Individual(my_path)
         else:
-            self.representation = representation
+            if type(representation) is Individual:
+                self.representation = representation.representation
+            elif type(representation) is list:
+                self.representation = representation
+            else:
+                raise Exception("Invalid representation type")
 
         # fitness will be assigned to the individual
         self.fitness = self.get_fitness()

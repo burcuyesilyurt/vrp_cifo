@@ -1,3 +1,5 @@
+import random
+from copy import copy
 from random import randint, sample, uniform
 
 
@@ -68,10 +70,10 @@ def pmx(p1, p2):
     #xo_points = [3,6]
     xo_points.sort()
 
-    def pmx_offspring(x,y):
+    def pmx_offspring(x, y):
         o = [None] * len(x)
         # offspring2
-        o[xo_points[0]:xo_points[1]]  = x[xo_points[0]:xo_points[1]]
+        o[xo_points[0]:xo_points[1]] = x[xo_points[0]:xo_points[1]]
         z = set(y[xo_points[0]:xo_points[1]]) - set(x[xo_points[0]:xo_points[1]])
 
         # numbers that exist in the segment
@@ -110,10 +112,61 @@ def geo_xo(p1,p2):
     return o
 
 
+def vrp_pmx(parent1, parent2):
+    def flatten_routes(parent):
+        flattened_parent = []
+        for route in parent:
+            flattened_parent.append(0)
+            if len(route) == 0:
+                flattened_parent.append(0)
+            else:
+                for i, locality in enumerate(route):
+                    flattened_parent.append(locality)
+                    if i == len(route) - 1:
+                        flattened_parent.append(0)
+
+        return flattened_parent
+
+    def reconstruct_routes(flat_offspring):
+        offspring = []
+
+        current_route = None
+        for i in flat_offspring:
+            if i == 0:
+                if current_route is None:
+                    current_route = []
+                else:
+                    offspring.append(current_route)
+                    current_route = None
+            else:
+                current_route.append(i)
+
+        return offspring
+
+    # Flatten the routes of both parents
+    flat_parent1 = flatten_routes(parent1)
+    flat_parent2 = flatten_routes(parent2)
+
+    flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
+
+    # Reconstruct routes for both offspring
+    offspring1 = reconstruct_routes(flat_offspring1)
+    offspring2 = reconstruct_routes(flat_offspring2)
+
+    return offspring1, offspring2
+
 if __name__ == "__main__":
     #p1, p2 = [9,8,2,1,7,4,5,10,6,3], [1,2,3,4,5,6,7,8,9,10]
     #p1, p2 = [2,7,4,3,1,5,6,9,8], [1,2,3,4,5,6,7,8,9]
-    p1, p2 = [9,8,4,5,6,7,1,3,2,10], [8,7,1,2,3,10,9,5,4,6]
-    o1, o2 = pmx(p1, p2)
-    print(o1,o2)
+    #p1, p2 = [9,8,4,5,6,7,1,3,2,10], [8,7,1,2,3,10,9,5,4,6]
+    #o1, o2 = pmx(p1, p2)
 
+    #p1 = [0, 5, 4, 3, 0, 2, 0, 1, 6, 0]
+    #p2 = [0, 1, 0, 3, 2, 0, 5, 4, 6, 0]
+    #o1, o2 = pmx(p1, p2)
+
+    p1 = [[1, 2], [4, 3], []]
+    p2 = [[4, 2], [3], [1]]
+    o1, o2 = vrp_pmx(p1, p2)
+    print(o1)
+    print(o2)
