@@ -114,24 +114,32 @@ def geo_xo(p1,p2):
 
 def vrp_pmx(parent1, parent2):
     def flatten_routes(parent):
-        return [customer for route in parent for customer in route if customer != 0]
+        flattened_parent = []
+        for route in parent:
+            flattened_parent.append(0)
+            if len(route) == 0:
+                flattened_parent.append(0)
+            else:
+                for i, locality in enumerate(route):
+                    flattened_parent.append(locality)
+                    if i == len(route) - 1:
+                        flattened_parent.append(0)
 
-    def can_add_to_route(route, customer):
-        # Assuming this function checks capacity and time windows
-        return True
+        return flattened_parent
 
     def reconstruct_routes(flat_offspring):
         offspring = []
-        route = [0]
-        for customer in flat_offspring:
-            if can_add_to_route(route, customer):  # Assuming can_add_to_route checks capacity and time windows
-                route.append(customer)
+
+        current_route = None
+        for i in flat_offspring:
+            if i == 0:
+                if current_route is None:
+                    current_route = []
+                else:
+                    offspring.append(current_route)
+                    current_route = None
             else:
-                route.append(0)
-                offspring.append(route)
-                route = [0, customer]
-        route.append(0)
-        offspring.append(route)
+                current_route.append(i)
 
         return offspring
 
@@ -139,7 +147,7 @@ def vrp_pmx(parent1, parent2):
     flat_parent1 = flatten_routes(parent1)
     flat_parent2 = flatten_routes(parent2)
 
-    flat_offspring1, flat_offspring2 = pmx(flat_parent1, flat_parent2)
+    flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
 
     # Reconstruct routes for both offspring
     offspring1 = reconstruct_routes(flat_offspring1)
@@ -152,9 +160,13 @@ if __name__ == "__main__":
     #p1, p2 = [2,7,4,3,1,5,6,9,8], [1,2,3,4,5,6,7,8,9]
     #p1, p2 = [9,8,4,5,6,7,1,3,2,10], [8,7,1,2,3,10,9,5,4,6]
     #o1, o2 = pmx(p1, p2)
+
+    #p1 = [0, 5, 4, 3, 0, 2, 0, 1, 6, 0]
+    #p2 = [0, 1, 0, 3, 2, 0, 5, 4, 6, 0]
+    #o1, o2 = pmx(p1, p2)
+
     p1 = [[1, 2], [4, 3], []]
     p2 = [[4, 2], [3], [1]]
-
     o1, o2 = vrp_pmx(p1, p2)
     print(o1)
     print(o2)

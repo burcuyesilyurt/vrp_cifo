@@ -24,3 +24,22 @@ def has_capacity_violation(route, data, vehicle_capacity):
             break
 
     return capacity_violation
+
+
+def has_battery_violation(route, data, battery_capacity):
+    battery_violation = False
+    current_battery = battery_capacity
+
+    for rep in route:
+        if data[rep][1] == "cd" or data[rep][1] == "cp":
+            current_battery += float(data[rep][4])
+
+        elif  data[rep][1] == "f":
+            current_battery = battery_capacity
+
+        if current_battery < 0:
+            battery_violation = True
+            break
+
+    return battery_violation
+

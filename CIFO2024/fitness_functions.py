@@ -1,31 +1,45 @@
 from utils import euclidean_distance
-from restrictions import has_pickup_violation, has_capacity_violation
-
+from restrictions import has_pickup_violation, has_capacity_violation, has_battery_violation
 
 def get_fitness(data):
+    # Define weights for each objective
+    vehicle_capacity = 200.0
+    battery_capacity = 77.5
+
+    weight_battery = 0.5
+    weight_time = 0.25
+    weight_order = 0.25
+
     def get_overall_fitness(individual):
-        #TODO implement the fitness function considering the different objectives
-        # We can try weighted sum or pareto front here
-        # Penalize if the first point is not the depot
         fitness_time = 0
+        fitness_capacity = 0
+        fitness_battery = 0
         for route in individual.representation:
             if not route:
                 continue
-
-            if route[0] != 0:
-                return 10000000
 
             if has_pickup_violation(route, data):
                 return 500000000
 
             fitness_time += get_fitness_time(route, data)
 
-        return fitness_time
+            if has_capacity_violation(route, data, vehicle_capacity):
+                return 500000000
+
+            fitness_capacity += get_fitness_vehicle_capacity(route,data)
+
+            if has_battery_violation(route, data, battery_capacity):
+                return 500000000
+
+            fitness_battery += get_fitness_vehicle_battery(route, data)
+
+        total_fitness = (weight_battery * fitness_battery +
+                         weight_time * fitness_time +
+                         weight_order * fitness_capacity)
+
+        return total_fitness
 
     return get_overall_fitness
-
-def get_fitness_capacity(route, data):
-    pass
 
 
 def get_fitness_time(route, data):
@@ -35,7 +49,10 @@ def get_fitness_time(route, data):
     time_error = False
     current_time = 0.0
     delivery_first = 100000
-    battery = 77.75
+
+    battery_capacity = 77.5
+    battery = battery_capacity
+    recharging_rate = 3.47
 
     for rep in route:
         ready_time = float(data[rep][5])
@@ -63,7 +80,7 @@ def get_fitness_time(route, data):
         current_time += service_time
 
         if 'S' in data[rep][0]:
-            time_charging = (77.75 - battery) * 3.47
+            time_charging = (battery_capacity - battery) * recharging_rate
             current_time += time_charging
 
         # print(rep,' ', delivery_first, ' ', d, ' ', current_time, ' ', time_charging, ' ', service_time, ' ', ready_time)
@@ -119,6 +136,24 @@ def get_fitness_vehicle_battery(route, data):
         battery_error = True
 
     if battery_error:
+        return 100000000
+
+    return 1
+
+
+def get_fitness_vehicle_capacity(route, data):
+    capacity = 200.0
+    capacity_error = False
+    capacity_now = capacity
+
+    for rep in route:
+        route = rep
+        capacity_now += float(data[rep][4])
+
+    if capacity_now < 0:
+        capacity_error = True
+
+    if capacity_error:
         return 100000000
 
     return 1
