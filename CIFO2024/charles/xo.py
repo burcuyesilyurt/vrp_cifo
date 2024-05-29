@@ -2,7 +2,7 @@ import random
 from copy import copy
 from random import randint, sample, uniform
 
-from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes
+from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
 
 
 def single_point_xo(parent1, parent2):
@@ -56,7 +56,6 @@ def cycle_xo(p1, p2):
                     offspring2[index] = p1[index]
 
     return offspring1, offspring2
-
 
 def pmx(p1, p2):
     """Implementation of partially matched/mapped crossover.
@@ -119,23 +118,42 @@ def geo_xo(p1,p2):
 def vrp_pmx(parent1, parent2):
 
     # Flatten the routes of both parents
-    flat_parent1 = flatten_routes2(parent1)
-    flat_parent2 = flatten_routes2(parent2)
+    flat_parent1 = flatten_routes(parent1)
+    flat_parent2 = flatten_routes(parent2)
 
-    flat_offspring1, flat_offspring2 = pmx(flat_parent1, flat_parent2)
+    flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
 
     # Reconstruct routes for both offspring
-    #offspring1 = reconstruct_routes(flat_offspring1)
-    #offspring2 = reconstruct_routes(flat_offspring2)
+    offspring1 = reconstruct_routes(flat_offspring1)
+    offspring2 = reconstruct_routes(flat_offspring2)
 
-    offspring1 = unflatten2(flat_offspring1)
-    offspring2 = unflatten2(flat_offspring2)
+    return offspring1, offspring2
 
-    offspring1_c, offspring2_c = correct_routes2(offspring1, offspring2)
-    print(offspring1_c)
-    print(offspring2_c)
+def vrp_single_point_xo(data):
 
-    return offspring1_c, offspring2_c
+    def xo(parent1, parent2):
+        flat_parent1 = flatten_routes(parent1)
+        flat_parent2 = flatten_routes(parent2)
+
+        flat_offspring1, flat_offspring2 = single_point_xo(flat_parent1, flat_parent2)
+
+        flat_offspring1 = repair_pickup(flat_offspring1, data)
+        flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
+        flat_offspring1 = fill_missing_deliveries(flat_offspring1, data)
+        flat_offspring1 = remove_duplicates(flat_offspring1)
+
+        flat_offspring2 = repair_pickup(flat_offspring2, data)
+        flat_offspring2 = fill_missing_pickups(flat_offspring2, data)
+        flat_offspring2 = fill_missing_deliveries(flat_offspring2, data)
+        flat_offspring2 = remove_duplicates(flat_offspring2)
+
+        offspring1 = reconstruct_routes(flat_offspring1)
+        offspring2 = reconstruct_routes(flat_offspring2)
+
+        return offspring1, offspring2
+
+    return xo
+
 
 if __name__ == "__main__":
     #p1, p2 = [9,8,2,1,7,4,5,10,6,3], [1,2,3,4,5,6,7,8,9,10]
@@ -167,51 +185,7 @@ if __name__ == "__main__":
     offspring1 = [0, 6, 5, 0, 0, 4, 2, 0, 0, 1, 3, 0]
 
     rp = repair_pickup(offspring1, data)
+    offspring = [2, 3, 0, 5, 4, 0, 2, 5, 0]
+    # Todo this doesn't work if both pickup and delivery is missing in the offspring
+    print(fill_missing_deliveries(fill_missing_pickups(offspring, data), data))
 
-
-def flatten_routes2(parent):
-    result = []
-    for i in range(len(parent)):
-        par = parent[i]
-        if len(par) == 0:
-            result.append(0)
-        else:
-            for j in par:
-                result.append(j)
-            result.append(0)
-    return result
-
-
-def unflatten2(parent):
-    result = []
-
-    par = parent
-    r = []
-    for i in range(len(par)):
-        if i == 0:
-            if par[i] != 0:
-                r.append(par[i])
-        if par[i] == 0:
-            result.append(r)
-            r = []
-        else:
-            r.append(par[i])
-
-    return result
-
-
-def correct_routes2(parent1, parent2):
-    p1 = []
-    p2 = []
-    for j in range(len(parent1)):
-        if len(parent1[j]) != 0:
-            p1.append(parent1[j])
-    for j in range(len(parent2)):
-        if len(parent2[j]) != 0:
-            p2.append(parent2[j])
-    while (len(p1) != len(p2)):
-        if len(p1) > len(p2):
-            p2.append([])
-        elif len(p2) > len(p1):
-            p1.append([])
-    return p1, p2
