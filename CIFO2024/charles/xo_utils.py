@@ -1,4 +1,5 @@
 from copy import copy
+from random import randint
 
 
 def flatten_routes(individual):
@@ -67,6 +68,14 @@ def fill_missing_pickups(offspring, data):
     for idx, i in enumerate(offspring):
         if data[i][1] == 'cd' and data[i][8] not in pickups_by_id.keys():
             result.insert(idx, all_pickups_by_id[data[i][8]])
+        else:
+            # Both pickup and delivery are missing, add the pickup randomly.
+            # The deliveries will be added next in the fill_missing_deliveries function
+            if idx == len(offspring) - 1:
+                missing_pickups = set(all_pickups_by_id.values()).difference(set(pickups_by_id.values()))
+                for pickup in missing_pickups:
+                    random_index = randint(0, len(offspring) - 1)
+                    result.insert(random_index, pickup)
 
     return result
 
