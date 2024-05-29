@@ -12,9 +12,6 @@ def get_fitness(data):
             if not route:
                 continue
 
-            if route[0] != 0:
-                return 10000000
-
             if has_pickup_violation(route, data):
                 return 500000000
 
