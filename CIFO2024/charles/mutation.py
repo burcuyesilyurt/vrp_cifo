@@ -33,5 +33,5 @@ def inversion_mutation(individual):
 
 
 if __name__ == "__main__":
-    test = [[0,1,9,7,5,4], [3,7]]
+    test = [[0,1,9,7,5,4], [3,7], [4,6,7], [4,2,6]]
     swap_mutation(test)
