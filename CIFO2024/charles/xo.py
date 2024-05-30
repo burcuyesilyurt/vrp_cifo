@@ -72,6 +72,7 @@ def pmx(p1, p2):
     xo_points.sort()
 
     def pmx_offspring(x, y):
+       
         o = [None] * len(x)
         # offspring2
         o[xo_points[0]:xo_points[1]] = x[xo_points[0]:xo_points[1]]
@@ -89,11 +90,13 @@ def pmx(p1, p2):
             o[index] = i
 
         # numbers that doesn't exist in the segment
+
+        
         while None in o:
             index = o.index(None)
             o[index] = y[index]
         return o
-
+    
     o1, o2 = pmx_offspring(p1, p2), pmx_offspring(p2, p1)
     return o1, o2
 
@@ -120,8 +123,8 @@ def vrp_pmx(parent1, parent2):
     # Flatten the routes of both parents
     flat_parent1 = flatten_routes(parent1)
     flat_parent2 = flatten_routes(parent2)
-
-    flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
+    
+    flat_offspring1, flat_offspring2 = pmx(flat_parent1, flat_parent2)
 
     # Reconstruct routes for both offspring
     offspring1 = reconstruct_routes(flat_offspring1)
@@ -132,10 +135,12 @@ def vrp_pmx(parent1, parent2):
 def vrp_single_point_xo(data):
 
     def xo(parent1, parent2):
+        
+        
         flat_parent1 = flatten_routes(parent1)
         flat_parent2 = flatten_routes(parent2)
-
-        flat_offspring1, flat_offspring2 = single_point_xo(flat_parent1, flat_parent2)
+        flat_parent1, flat_parent2 = same_size_flat(flat_parent1,flat_parent2)
+        flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
 
         flat_offspring1 = repair_pickup(flat_offspring1, data)
         flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
@@ -155,11 +160,20 @@ def vrp_single_point_xo(data):
        # print(flat_offspring1, flat_offspring2)
         #print(offspring1, offspring2)
         
-        offspring1, offspring2 = same_size(offspring1, offspring2,4)
+        offspring1, offspring2 = same_size(offspring1, offspring2,8)
         
         return offspring1, offspring2
 
     return xo
+
+def same_size_flat(f_parent1, f_parent2):
+    while len(f_parent1)!= len(f_parent2):
+        if len(f_parent1)< len(f_parent2):
+            f_parent1.append(0)
+        else:
+            f_parent2.append(0)
+
+    return f_parent1, f_parent2
 def same_size(parent1, parent2, max_v):
     
     count = 0

@@ -34,12 +34,11 @@ def get_fitness_capacity(route, data):
     max_capacity = False
     for rep in route:
        car = car + float(data[rep][4])
-       print(car)
        if car > cars_capacity:
            max_capacity = True
            break
     if max_capacity:
-        print("a")
+        
         return 1000000
     else:
         return 0

@@ -35,7 +35,7 @@ data = [['D0', 'd', '40.0', '50.0', '0.0', '0.0', '240.0', '0.0', '0'], ['S0', '
 
 # Max number of vehicles = number of pick ups
 #max_vehicles = len(list(filter(lambda e: e[1] == "cp", data)))
-max_vehicles = 4
+max_vehicles = 8
 
 # Monkey patching
 Individual.get_fitness = get_fitness(data)
