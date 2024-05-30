@@ -4,7 +4,7 @@ from random import sample
 from charles.charles import Population, Individual
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
-from charles.xo import cycle_xo, pmx, vrp_pmx, vrp_single_point_xo, sequential_constructive_xo
+from charles.xo import cycle_xo, pmx, vrp_pmx, vrp_xo, sequential_constructive_xo, single_point_xo
 from fitness_functions import get_fitness
 from initializations import random_initialization
 
@@ -35,7 +35,7 @@ data = [['D0', 'd', '40.0', '50.0', '0.0', '0.0', '240.0', '0.0', '0'], ['S0', '
 
 # Max number of vehicles = number of pick ups
 #max_vehicles = len(list(filter(lambda e: e[1] == "cp", data)))
-max_vehicles = 15
+max_vehicles = 45
 
 # Monkey patching
 Individual.get_fitness = get_fitness(data)
@@ -46,8 +46,8 @@ if __name__ == "__main__":
     P.evolve(gens=100,
              xo_prob=1,
              mut_prob=0.15,
-             select=tournament_sel,
-             xo=vrp_single_point_xo(data, max_vehicles),
-             #xo=sequential_constructive_xo(data),
+             select=fps,
+             #xo=vrp_xo(data, max_vehicles, single_point_xo),
+             xo=sequential_constructive_xo(data),
              mutate=swap_mutation,
              elitism=True)

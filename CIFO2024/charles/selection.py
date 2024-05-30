@@ -20,7 +20,13 @@ def fps(population):
             if position > r:
                 return individual
     elif population.optim == "min":
-        raise NotImplementedError
+        total_fitness = sum([1.0 / i.fitness for i in population])
+        r = uniform(0, total_fitness)
+        position = 0
+        for individual in population:
+            position += 1.0 / individual.fitness
+            if position > r:
+                return individual
     else:
         raise Exception(f"Optimization not specified (max/min)")
 

@@ -47,7 +47,7 @@ def get_fitness_capacity(route, data):
 def get_fitness_time(route, data):
     # Assign d0 to be equals the depot
     d0 = data[0]
-
+    delay = 0
     time_error = False
     current_time = 0
     delivery_first = 100000
@@ -72,7 +72,7 @@ def get_fitness_time(route, data):
             current_time = ready_time
 
         if due_date < current_time:
-            time_error = True
+            delay += (current_time-due_date)
 
         delivery_first = rep
 
@@ -91,10 +91,9 @@ def get_fitness_time(route, data):
     #if float(d0[6]) < current_time:
      #   time_error = True
         
-    #if time_error:
+    if delay > 0:
+        current_time += delay*10
         
-     #   return 1000000
-
     return current_time
 
 

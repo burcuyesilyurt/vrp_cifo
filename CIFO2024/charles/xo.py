@@ -136,7 +136,7 @@ def vrp_pmx(parent1, parent2):
 
     return offspring1, offspring2
 
-def vrp_single_point_xo(data, max_vehicles):
+def vrp_xo(data, max_vehicles, xo_operation):
 
     def xo(parent1, parent2):
         
@@ -144,7 +144,8 @@ def vrp_single_point_xo(data, max_vehicles):
         flat_parent1 = flatten_routes(parent1)
         flat_parent2 = flatten_routes(parent2)
         flat_parent1, flat_parent2 = same_size_flat(flat_parent1,flat_parent2)
-        flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
+        
+        flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
 
         flat_offspring1 = repair_pickup(flat_offspring1, data)
         flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
