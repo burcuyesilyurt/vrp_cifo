@@ -38,11 +38,22 @@ def reconstruct_routes(flat_offspring):
 
 def repair_routes(flat_offspring, data):
     offspring_repaired = repair_pickup(flat_offspring, data)
+
     offspring_w_pickups = fill_missing_pickups(offspring_repaired, data)
     offspring_w_deliveries = fill_missing_deliveries(offspring_w_pickups, data)
-    offspring1_no_duplicates = remove_duplicates(offspring_w_deliveries)
+    offspring_no_duplicates = remove_duplicates(offspring_w_deliveries)
 
-    return offspring1_no_duplicates
+    return offspring_no_duplicates
+
+def repair_routes_random(flat_offspring, data):
+
+    offspring_w_pickups = fill_missing_pickups_with_random(flat_offspring, data)
+    offspring_w_deliveries = fill_missing_deliveries_with_random(offspring_w_pickups, data)
+    offspring_repaired = repair_pickup_with_random(offspring_w_deliveries, data)
+    offspring_no_duplicates = remove_duplicates(offspring_repaired)
+
+    return offspring_no_duplicates
+
 
 def repair_pickup(offspring, data):
     """
@@ -66,11 +77,58 @@ def repair_pickup(offspring, data):
 
     return result
 
+def repair_pickup_with_random(offspring, data):
+    """
+    This function repairs the offspring by putting the delivery in a random position after the pickup.
 
+    :param offspring:
+    :param data:
+    :return:
+    """
 
-def repair_pickup_randomly(offspring, data):
-    pass
+    for i in range(len(offspring)):
+        locality = offspring[i]
 
+        if data[locality][1] == "cp":
+            for j in range(i+1, len(offspring)):
+                potential_delivery = offspring[j]
+
+                if data[potential_delivery][1] == 'cd' and data[potential_delivery][8] == data[locality][0]:
+                    # Find next occurrence of zero, which indicate end of current route
+                    end_of_route = i + offspring[i:].index(0)
+
+                    # if j is already in the route, do nothing
+                    if i < j < end_of_route:
+                        continue
+
+                    if i+1 == end_of_route:
+                        index_to_add_delivery = i+1
+                    else:
+                        index_to_add_delivery = randint(i+1, end_of_route)
+
+                    offspring.insert(index_to_add_delivery, potential_delivery)
+                    del offspring[j+1]
+
+    for i in range(len(offspring)):
+        locality = offspring[i]
+
+        if data[locality][1] == "cd":
+            for j in range(i + 1, len(offspring)):
+                potential_pickup = offspring[j]
+
+                if data[potential_pickup][1] == 'cp' and data[potential_pickup][8] == data[locality][0]:
+                    # Find next occurrence of zero, which indicate end of current route
+                    end_of_route = j + offspring[j:].index(0)
+
+                    if j + 1 == end_of_route:
+                        index_to_add_delivery = j + 1
+                    else:
+                        index_to_add_delivery = randint(j + 1, end_of_route)
+
+                    offspring.insert(index_to_add_delivery, locality)
+                    offspring[i] = None
+
+    return [i for i in offspring if i is not None]
 
 def fill_missing_pickups(offspring, data):
     pickups_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cp'}
@@ -88,6 +146,38 @@ def fill_missing_pickups(offspring, data):
                 for pickup in missing_pickups:
                     random_index = randint(0, len(offspring) - 1)
                     result.insert(random_index, pickup)
+
+    return result
+
+def fill_missing_pickups_with_random(offspring, data):
+    pickups_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cp'}
+    all_pickups_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cp'}
+
+    result = deepcopy(offspring)
+    for idx, i in enumerate(offspring):
+        if data[i][1] == 'cd' and data[i][8] not in pickups_by_id.keys():
+            # NOTE: the trick here is to add it to an invalid position, so the repair will replace it randomly later
+            result.insert(idx+1, all_pickups_by_id[data[i][8]])
+        else:
+            # Both pickup and delivery are missing, add the pickup randomly.
+            # The deliveries will be added next in the fill_missing_deliveries function
+            if idx == len(offspring) - 1:
+                missing_pickups = set(all_pickups_by_id.values()).difference(set(pickups_by_id.values()))
+                for pickup in missing_pickups:
+                    random_index = randint(0, len(offspring) - 1)
+                    result.insert(random_index, pickup)
+
+    return result
+
+def fill_missing_deliveries_with_random(offspring, data):
+    deliveries_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cd'}
+    all_deliveries_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cd'}
+
+    result = deepcopy(offspring)
+    for i in offspring:
+        if data[i][1] == 'cp' and data[i][8] not in deliveries_by_id.keys():
+            # NOTE: the trick here is to add it to an invalid position, so the repair will replace it randomly later
+            result.insert(offspring.index(i), all_deliveries_by_id[data[i][8]])
 
     return result
 
