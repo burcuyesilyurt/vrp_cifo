@@ -48,8 +48,7 @@ if __name__ == "__main__":
                 data.pop(i)
                 break
     
-    if "S" in data:
-        print("shoot")
+    
     print(data[33])
     P = Population(size=20, optim="min", init_func=random_initialization(data, max_vehicles))
     # TODO change mut prob when mutation is implemented for our structure

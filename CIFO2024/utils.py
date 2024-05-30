@@ -1,8 +1,8 @@
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 #from read_data import data, d0
-import matplotlib.image as mpimg
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+#import matplotlib.image as mpimg
+#from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 import math
 
