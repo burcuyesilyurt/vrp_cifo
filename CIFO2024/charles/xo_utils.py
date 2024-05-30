@@ -48,17 +48,21 @@ def repair_pickup(offspring, data):
     :param data:
     :return:
     """
-    for i in offspring:
-        if data[i][1] == 'cp':
+    result = []
+   
+
+    for idx, e in enumerate(offspring):
+        if data[e][1] != 'cp' and data[e][1] != 'cd':
+            result.append(e)
+        else:
             for j in range(len(offspring)):
-                if data[offspring[j]][1] == 'cd' and data[offspring[j]][8] == data[i][0]:
+                if data[offspring[j]][1] == 'cd' and data[offspring[j]][8] == data[e][0]:
                     # Put the delivery right after the pickup
-                    offspring.insert(offspring.index(i)+1, offspring[j])
-                    del offspring[j+1]
+                    result.append(e)
+                    result.append(offspring[j])
                     break
 
-    return offspring
-
+    return result
 
 def repair_pickup_randomly(offspring, data):
     pass

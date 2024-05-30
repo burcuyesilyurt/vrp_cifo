@@ -35,17 +35,20 @@ data = [['D0', 'd', '40.0', '50.0', '0.0', '0.0', '240.0', '0.0', '0'], ['S0', '
 
 # Max number of vehicles = number of pick ups
 #max_vehicles = len(list(filter(lambda e: e[1] == "cp", data)))
-max_vehicles = 15
+max_vehicles = 4
 
 # Monkey patching
 Individual.get_fitness = get_fitness(data)
 
 if __name__ == "__main__":
+
     for j in range(0, len(data)):
         for i in range(0,len(data)):
             if "S" in data[i][0]:
                 data.pop(i)
                 break
+    if "S" in data:
+        print("shoot")
     print(data[33])
     P = Population(size=20, optim="min", init_func=random_initialization(data, max_vehicles))
     # TODO change mut prob when mutation is implemented for our structure
