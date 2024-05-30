@@ -12,7 +12,6 @@ def swap_mutation(individual):
     """
     mut_list_index = randrange(len(individual))
     chosen_list = individual[mut_list_index]
-
     while len(chosen_list) <= 1:
         mut_list_index = randrange(len(individual))
         chosen_list = individual[mut_list_index]
