@@ -53,11 +53,14 @@ The fitness function takes into account the following variables:
 * ...
 
 ## Authors
-* Devora Cavaleiro - 20230794
-* Carlos Rodrigues - 20230543
-* David Guarin -
-* Burcu - 
-* Lia -
+| Name              | ID        |
+|-------------------|-----------|
+| Devora Cavaleiro  | 20230794  |
+| Carlos Rodrigues  | 20230543  |
+| David Guarin      |           |
+| Burcu             |           |
+| Lia               |           |
+
 
 ## References
 * Rahmat, R. W., & Zaharuddin, W. M. (2013). Solving the Vehicle Routing Problem using Genetic Algorithm. 
