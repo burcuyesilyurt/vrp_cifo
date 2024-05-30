@@ -1,8 +1,11 @@
-#import matplotlib.pyplot as plt
+
+import matplotlib.pyplot as plt
 #from read_data import data, d0
-#import matplotlib.image as mpimg
-#from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+
 import math
+
 
 
 def euclidean_distance(a, b):
@@ -65,7 +68,9 @@ def plot_vrp_solution(solution, all_points):
 
 
 
-solution = [0, 7, 3, 1, 6, 5, 2, 8, 4]
-#all_points = [d0] + data
 
-#plot_vrp_solution(solution, all_points)
+# solution = [0, 7, 3, 1, 6, 5, 2, 8, 4]
+# all_points =  [d0] + data
+#
+# plot_vrp_solution(solution, all_points)
+

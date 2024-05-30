@@ -58,5 +58,5 @@ if __name__ == "__main__":
              mut_prob=0.15,
              select=tournament_sel,
              xo=vrp_single_point_xo(data),
-             mutate=inversion_mutation,
+             mutate=swap_mutation,
              elitism=True)

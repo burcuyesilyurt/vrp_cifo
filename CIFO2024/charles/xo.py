@@ -1,8 +1,10 @@
 import random
-from copy import copy
+from copy import copy, deepcopy
 from random import randint, sample, uniform
 
+
 from charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
+
 
 
 def single_point_xo(parent1, parent2):
@@ -139,6 +141,7 @@ def vrp_pmx(parent1, parent2):
 
 def vrp_single_point_xo(data):
 
+
     def xo(parent1, parent2):
         
         
@@ -147,15 +150,13 @@ def vrp_single_point_xo(data):
         flat_parent1, flat_parent2 = same_size_flat(flat_parent1,flat_parent2)
         flat_offspring1, flat_offspring2 = cycle_xo(flat_parent1, flat_parent2)
 
-        flat_offspring1 = repair_pickup(flat_offspring1, data)
-        flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
-        flat_offspring1 = fill_missing_deliveries(flat_offspring1, data)
-        flat_offspring1 = remove_duplicates(flat_offspring1)
 
-        flat_offspring2 = repair_pickup(flat_offspring2, data)
-        flat_offspring2 = fill_missing_pickups(flat_offspring2, data)
-        flat_offspring2 = fill_missing_deliveries(flat_offspring2, data)
-        flat_offspring2 = remove_duplicates(flat_offspring2)
+    def xo(parent1, parent2):
+        offspring1, offspring2 = my_single_point_xo(parent1, parent2)
+
+        flat_offspring1 = flatten_routes(offspring1)
+        flat_offspring2 = flatten_routes(offspring2)
+
 
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
@@ -168,6 +169,7 @@ def vrp_single_point_xo(data):
         offspring1, offspring2 = same_size(offspring1, offspring2,15)
         
         return offspring1, offspring2
+
 
     return xo
 
