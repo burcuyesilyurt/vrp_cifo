@@ -1,6 +1,8 @@
 import random
-from copy import copy
+from copy import copy, deepcopy
 from random import randint, sample, uniform
+
+from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, repair_routes
 
 
 def single_point_xo(parent1, parent2):
@@ -55,7 +57,6 @@ def cycle_xo(p1, p2):
 
     return offspring1, offspring2
 
-
 def pmx(p1, p2):
     """Implementation of partially matched/mapped crossover.
 
@@ -80,9 +81,11 @@ def pmx(p1, p2):
         for i in z:
             temp = i
             index = y.index(x[y.index(temp)])
-            while o[index] is not None:
+            count = 0
+            while o[index] is not None and count < 50:
                 temp = index
                 index = y.index(x[temp])
+                count += 1
             o[index] = i
 
         # numbers that doesn't exist in the segment
@@ -113,35 +116,6 @@ def geo_xo(p1,p2):
 
 
 def vrp_pmx(parent1, parent2):
-    def flatten_routes(parent):
-        flattened_parent = []
-        for route in parent:
-            flattened_parent.append(0)
-            if len(route) == 0:
-                flattened_parent.append(0)
-            else:
-                for i, locality in enumerate(route):
-                    flattened_parent.append(locality)
-                    if i == len(route) - 1:
-                        flattened_parent.append(0)
-
-        return flattened_parent
-
-    def reconstruct_routes(flat_offspring):
-        offspring = []
-
-        current_route = None
-        for i in flat_offspring:
-            if i == 0:
-                if current_route is None:
-                    current_route = []
-                else:
-                    offspring.append(current_route)
-                    current_route = None
-            else:
-                current_route.append(i)
-
-        return offspring
 
     # Flatten the routes of both parents
     flat_parent1 = flatten_routes(parent1)
@@ -155,6 +129,35 @@ def vrp_pmx(parent1, parent2):
 
     return offspring1, offspring2
 
+def vrp_single_point_xo(data):
+
+    def my_single_point_xo(parent1, parent2):
+        assert len(parent1) == len(parent2)
+        crossover_point = randint(0, len(parent1)-1)
+        p1 = deepcopy(parent1)
+        p2 = deepcopy(parent2)
+        offspring1 = p1[:crossover_point] + p2[crossover_point:]
+        offspring2 = p2[:crossover_point] + p1[crossover_point:]
+
+        return offspring1, offspring2
+
+    def xo(parent1, parent2):
+        offspring1, offspring2 = my_single_point_xo(parent1, parent2)
+
+        flat_offspring1 = flatten_routes(offspring1)
+        flat_offspring2 = flatten_routes(offspring2)
+
+        offspring1_repaired = repair_routes(flat_offspring1, data)
+        offspring2_repaired = repair_routes(flat_offspring2, data)
+
+        offspring1_final = reconstruct_routes(offspring1_repaired)
+        offspring2_final = reconstruct_routes(offspring2_repaired)
+
+        return offspring1_final, offspring2_final
+
+    return xo
+
+
 if __name__ == "__main__":
     #p1, p2 = [9,8,2,1,7,4,5,10,6,3], [1,2,3,4,5,6,7,8,9,10]
     #p1, p2 = [2,7,4,3,1,5,6,9,8], [1,2,3,4,5,6,7,8,9]
@@ -165,8 +168,27 @@ if __name__ == "__main__":
     #p2 = [0, 1, 0, 3, 2, 0, 5, 4, 6, 0]
     #o1, o2 = pmx(p1, p2)
 
-    p1 = [[1, 2], [4, 3], []]
-    p2 = [[4, 2], [3], [1]]
-    o1, o2 = vrp_pmx(p1, p2)
-    print(o1)
-    print(o2)
+    data = [
+        # 0
+        ['D0', 'd', '40.0', '50.0', '0.0', '0.0', '1236.0', '0.0', '0'],
+        # 1
+        ['C20', 'cd', '30.0', '50.0', '-10.0', '0.0', '1136.0', '90.0', 'C99'],
+        # 2
+        ['C24', 'cd', '25.0', '50.0', '-20.0', '0.0', '1131.0', '90.0', 'C65'],
+        # 3
+        ['C57', 'cd', '40.0', '15.0', '-60.0', '989.0', '1069.0', '90.0', 'C98'],
+        # 4
+        ['C65', 'cp', '48.0', '40.0', '20.0', '67.0', '139.0', '90.0', 'C24'],
+        # 5
+        ['C98', 'cp', '58.0', '75.0', '60.0', '0.0', '1115.0', '90.0', 'C57'],
+        # 6
+        ['C99', 'cp', '30.0', '50.0', '10.0', '0.0', '1136.0', '0.0', 'C20']
+    ]
+
+    offspring1 = [0, 6, 5, 0, 0, 4, 2, 0, 0, 1, 3, 0]
+
+    rp = repair_pickup(offspring1, data)
+    offspring = [2, 3, 0, 5, 4, 0, 2, 5, 0]
+    # Todo this doesn't work if both pickup and delivery is missing in the offspring
+    print(fill_missing_deliveries(fill_missing_pickups(offspring, data), data))
+
