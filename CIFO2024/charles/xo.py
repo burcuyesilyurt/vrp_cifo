@@ -136,7 +136,7 @@ def vrp_pmx(parent1, parent2):
 
     return offspring1, offspring2
 
-def vrp_single_point_xo(data):
+def vrp_single_point_xo(data, max_vehicles):
 
     def xo(parent1, parent2):
         
@@ -164,7 +164,7 @@ def vrp_single_point_xo(data):
        # print(flat_offspring1, flat_offspring2)
         #print(offspring1, offspring2)
         
-        offspring1, offspring2 = same_size(offspring1, offspring2,15)
+        offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
         
         return offspring1, offspring2
 

@@ -4,7 +4,7 @@ from random import sample
 from charles.charles import Population, Individual
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
-from charles.xo import cycle_xo, pmx, vrp_pmx, vrp_single_point_xo
+from charles.xo import cycle_xo, pmx, vrp_pmx, vrp_single_point_xo, sequential_constructive_xo
 from fitness_functions import get_fitness
 from initializations import random_initialization
 
@@ -41,21 +41,13 @@ max_vehicles = 15
 Individual.get_fitness = get_fitness(data)
 
 if __name__ == "__main__":
-
-    for j in range(0, len(data)):
-        for i in range(0,len(data)):
-            if "S" in data[i][0]:
-                data.pop(i)
-                break
-    
-    
-    print(data[33])
     P = Population(size=20, optim="min", init_func=random_initialization(data, max_vehicles))
     # TODO change mut prob when mutation is implemented for our structure
     P.evolve(gens=100,
              xo_prob=1,
              mut_prob=0.15,
              select=tournament_sel,
-             xo=vrp_single_point_xo(data),
+             xo=vrp_single_point_xo(data, max_vehicles),
+             #xo=sequential_constructive_xo(data),
              mutate=swap_mutation,
              elitism=True)
