@@ -2,7 +2,7 @@ import random
 from copy import copy
 from random import randint, sample, uniform
 
-from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
+from charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
 
 
 def single_point_xo(parent1, parent2):
@@ -149,11 +149,52 @@ def vrp_single_point_xo(data):
 
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
-
+        #check_if(offspring1, flat_offspring1)
+        #check_if(offspring2, flat_offspring2)
+        
+       # print(flat_offspring1, flat_offspring2)
+        #print(offspring1, offspring2)
+        
+        offspring1, offspring2 = same_size(offspring1, offspring2,15)
+        
         return offspring1, offspring2
 
     return xo
-
+def same_size(parent1, parent2, max_v):
+    
+    count = 0
+    while len(parent1) != len(parent2):
+        if len(parent1)>max_v and len(parent1)>0:
+            ver = True
+            for i in range(0,len(parent1)):
+                if len(parent1[len(parent1)-i-1]) ==0:
+                    parent1.pop(len(parent1)-i-1)
+                    ver = False
+                    break
+            if ver:
+                for j in parent1[len(parent1)-1]:
+                    parent1[len(parent1)-2].append(j)
+                parent1.pop(len(parent1)-1)
+                
+        if len(parent2)>max_v and len(parent2)>0:
+            ver = True
+            for i in range(0,len(parent2)):
+                if len(parent2[len(parent2)-i-1]) ==0:
+                    parent2.pop(len(parent2)-i-1)
+                    ver = False
+                    break
+            if ver:
+                for j in (parent2[len(parent2)-1]):
+                    parent2[len(parent2)-2].append(j)
+                parent2.pop(len(parent2)-1)
+                
+        else:
+            if len(parent1)< len(parent2):
+                parent1.append([])
+            else:
+                parent2.append([])
+        count += 1
+    return parent1, parent2
 
 if __name__ == "__main__":
     #p1, p2 = [9,8,2,1,7,4,5,10,6,3], [1,2,3,4,5,6,7,8,9,10]
@@ -189,3 +230,15 @@ if __name__ == "__main__":
     # Todo this doesn't work if both pickup and delivery is missing in the offspring
     print(fill_missing_deliveries(fill_missing_pickups(offspring, data), data))
 
+def check_if(parent, flat):
+    num = 7 
+    val = 0
+    for i in range(1, num):
+        yes = False
+        for j in parent:
+            if len(j)!=0:
+                if i in j:
+                    yes=True
+                    
+        if yes==False:
+            print('error', parent, i, flat)   

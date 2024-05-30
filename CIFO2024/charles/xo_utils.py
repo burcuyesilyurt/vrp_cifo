@@ -23,17 +23,21 @@ def flatten_routes(individual):
 
 
 def reconstruct_routes(flat_offspring):
-    offspring = []
-
-    current_route = []
-    for i in flat_offspring:
+    
+    result = []
+    par = flat_offspring
+    r = []
+    for i in range(len(par)):
         if i == 0:
-            offspring.append(current_route)
-            current_route = []
+            if par[i] != 0:
+                    r.append(par[i])
         else:
-            current_route.append(i)
-
-    return offspring
+            if par[i] ==0:
+                result.append(r)
+                r =[]
+            else:
+                r.append(par[i])
+    return result
 
 
 def repair_pickup(offspring, data):
