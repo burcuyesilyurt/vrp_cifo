@@ -1,67 +1,65 @@
-# vrp_cifo
+# Project of Computational Intelligence for Optimization - 2024
+## Vehicle Routing Problem (vrp)
+This project tries to solve the optimization problem of the vrp, with genetic algorithms. The goal is to minimize the distance made by the car, while making the delivers of all the packages. Meanwhile, the car still need to have battery to return to depot.
 
+## Problem definition
+### Entities
+* Vehicles;
+* Customers;
+* Recharging stations;
+* Depot.
 
-# Entities
-Vehicles
-Customers
-Recharging Stations
-Depot
-
-# Representation
+### Representation
 In order to make our data available to the algorithm we have to represent:
-V1X = Vehicle
-CPX = Customers Pickup
-CD = Customer Delivery
-SX = Recharging Stations
-D1 = Depot (we're considering only one depot for simplicity)
+* **CPX** = Customers Pickup (where X represents the indexed customer);
+* **CD** = Customer Delivery;
+* **SX** = Recharging Stations (where X represents the indexed station);
+* **D1** = Depot (we're considering only one depot for simplicity).
 
-So for instance, one trip that delivery to customer 1, following by customers 2 and 3 can be represent like `[D1,V1,CP1,CP2,CD1,CP3,CD3,CD2,D1]`, where all routes will start with `D1` followed by the vehicle that will do that route.
+So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[D1,CP1,CP2,CD1,CP3,CD3,CD2,D1]]`, where all routes will start with `D1` followed by the vehicle that will do that route.
+The route of the different vehicles is defined by the inner lists, within the main list.
 
-# Problem premises
-- All routes must start and end at Depot 1 (following the paper)
-- All picked up orders must be delivery
-- The order must be picked up before delivery
+### Problem premises
+- All routes must start and end at Depot 1;
+- All picked up orders must be delivery;
+- The order only can be picked up if the time window is ready for pickup;
+- The order must be picked up before delivery.
 
-# Fitness Function
-## Things to consider
-- Capacity
-- Number of vehicles used
-- Time Windows
-	- Should we consider waiting time in the fitness? More waiting time equals worst fitness? I think at first no.
-- Battery
-- Distance
+### Personalized parameters
+* Data file;
+* Number of vehicles;
+* ...
 
-# Ways to validate feasibility
-- Allow it but decrease fitness
-	- Can increase computation time, but easier to implement
-- Make the modifications and then validate, removing invalid movements.
-	- It's easier to implement, but have to validate if there are some side-effects
-- Don't allow it at all
-	- We should find a way to do this, because it can make the crossover and mutation logic harder to implement
+### Fitness Function
+The fitness function takes into account the following variables:
+* Capacity - penalize the exceeded capacity level;
+* Battery level;
+* Time window;
+* Distance - shortest distance is preferable.
 
-## Feasibility Checks
-- Capacity exceeded
-- Late order delivery
-- Vehicle out of battery
+### Mutation
+* `swap_mutation()` - Swaps elements within each sublist.
+* `inversion_mutation()` - Reverts a portion of the representation.
 
+### Crossover
+* XX
+* XX
 
-# POC
-I would suggest to try to implement a v0 without considering the battery, only to check the difficulty of the problem. But first I'll stress more the problem.
-
-# Implementation steps
-- Convert the given datasets into python objects, parsing the problem
-- Create the initialization function ensuring that feasibility will be respected
-	- This is hard because the representation changes a little, and the library doesn't handle this. For instance, all valid_set is sampled, but in our case this isn't possible because some part allows repetition and others don't
-	- Will it be completely random or we'll use some heuristics?
-- Do a very very simple cross-over implementation
-- Do a very very simple mutation implementation (optional?)
-- Build the Benchmarks module to do statistical testing.
-
-## TODOS (so far):
-- [ ] Implement initialization method (random at first)
-- [ ] Implement fitness functions
+## Comments
 
 
-# References
-Unfortunately, I couldn't find the most updated version of the paper, but I found a old one that can be used as a reference
-https://web4.ensiie.fr/~faye/mpro/MPRO_reseau/Projet_2020/The%20electric%20vehicle%20routing%20problem%20with%20time%20windows%20and%20recharging%20stations.pdf
+## External libraries
+* Matplotlib;
+* ...
+
+## Authors
+* Devora Cavaleiro - 20230794
+* Carlos Rodrigues - 20230543
+* David Guarin -
+* Burcu - 
+* Lia -
+
+## References
+* Rahmat, R. W., & Zaharuddin, W. M. (2013). Solving the Vehicle Routing Problem using Genetic Algorithm. 
+* Toth, P., & Vigo, D. (2002). An overview of vehicle routing problems. European Journal of Operational Research, 144(3), 465-474.
+* Keskin, M., & Çatay, B. (2018). The electric vehicle routing problem with time windows and recharging stations. Transportation Research Part C: Emerging Technologies, 87, 113-137. 
