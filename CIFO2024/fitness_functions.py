@@ -41,7 +41,9 @@ def get_fitness_capacity(route, data):
         
         return 1000000
     else:
-        return 0
+        return 1
+    
+
 def get_fitness_time(route, data):
     # Assign d0 to be equals the depot
     d0 = data[0]

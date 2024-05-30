@@ -165,7 +165,7 @@ def vrp_single_point_xo(data):
        # print(flat_offspring1, flat_offspring2)
         #print(offspring1, offspring2)
         
-        offspring1, offspring2 = same_size(offspring1, offspring2,8)
+        offspring1, offspring2 = same_size(offspring1, offspring2,15)
         
         return offspring1, offspring2
 
