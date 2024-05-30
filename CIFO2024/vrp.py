@@ -48,7 +48,7 @@ data = [
 
 # Max number of vehicles = number of pick ups
 #max_vehicles = len(list(filter(lambda e: e[1] == "cp", data)))
-max_vehicles = 3
+max_vehicles = 2
 
 # Monkey patching
 Individual.get_fitness = get_fitness(data)
@@ -61,6 +61,6 @@ if __name__ == "__main__":
              xo_prob=1,
              mut_prob=0,
              select=tournament_sel,
-             xo=vrp_pmx,
-             mutate=inversion_mutation,
+             xo=vrp_single_point_xo(data),
+             mutate=swap_mutation,
              elitism=True)
