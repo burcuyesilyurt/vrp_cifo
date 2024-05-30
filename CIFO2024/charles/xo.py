@@ -2,7 +2,7 @@ import random
 from copy import copy, deepcopy
 from random import randint, sample, uniform
 
-from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
+from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, repair_routes
 
 
 def single_point_xo(parent1, parent2):
@@ -147,18 +147,11 @@ def vrp_single_point_xo(data):
         flat_offspring1 = flatten_routes(offspring1)
         flat_offspring2 = flatten_routes(offspring2)
 
-        offspring1_repaired = repair_pickup(flat_offspring1, data)
-        offspring1_w_pickups = fill_missing_pickups(offspring1_repaired, data)
-        offspring1_w_deliveries = fill_missing_deliveries(offspring1_w_pickups, data)
-        offspring1_no_duplicates = remove_duplicates(offspring1_w_deliveries)
+        offspring1_repaired = repair_routes(flat_offspring1, data)
+        offspring2_repaired = repair_routes(flat_offspring2, data)
 
-        offspring2_repaired = repair_pickup(flat_offspring2, data)
-        offspring2_w_pickups = fill_missing_pickups(offspring2_repaired, data)
-        offspring2_w_deliveries = fill_missing_deliveries(offspring2_w_pickups, data)
-        offspring2_no_duplicates = remove_duplicates(offspring2_w_deliveries)
-
-        offspring1_final = reconstruct_routes(offspring1_no_duplicates)
-        offspring2_final = reconstruct_routes(offspring2_no_duplicates)
+        offspring1_final = reconstruct_routes(offspring1_repaired)
+        offspring2_final = reconstruct_routes(offspring2_repaired)
 
         return offspring1_final, offspring2_final
 

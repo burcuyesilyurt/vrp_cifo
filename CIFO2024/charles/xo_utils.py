@@ -36,6 +36,14 @@ def reconstruct_routes(flat_offspring):
     return offspring
 
 
+def repair_routes(flat_offspring, data):
+    offspring_repaired = repair_pickup(flat_offspring, data)
+    offspring_w_pickups = fill_missing_pickups(offspring_repaired, data)
+    offspring_w_deliveries = fill_missing_deliveries(offspring_w_pickups, data)
+    offspring1_no_duplicates = remove_duplicates(offspring_w_deliveries)
+
+    return offspring1_no_duplicates
+
 def repair_pickup(offspring, data):
     """
     This function repairs the offspring by putting the delivery right after the pickup.
