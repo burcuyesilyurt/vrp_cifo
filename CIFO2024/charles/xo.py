@@ -170,6 +170,60 @@ def vrp_single_point_xo(data):
 
     return xo
 
+
+def sequential_constructive_xo(data):
+    def add_to_offspring(offspring, parents, parent_to_inherit, main_parent_index, i):
+        # "main" delimiter have precedence in order to maintain route sizes
+        if parents[main_parent_index][i] == 0:
+            offspring.append(0)
+            return
+
+        # not "main" parent delimiter have low precedence, so we don't want to inherit it.
+        if parents[not main_parent_index][i] == 0:
+            offspring.append(parents[main_parent_index][i])
+            return
+
+        offspring.append(parents[parent_to_inherit][i])
+
+    def seq_xo(parent1, parent2):
+        assert len(parent1) == len(parent2)
+
+        offspring1 = []
+        offspring2 = []
+        parents = [parent1, parent2]
+
+        for i in range(len(parent1)):
+            parent_to_inherit = bool(random.randint(0, 1))
+
+            add_to_offspring(offspring1, parents, parent_to_inherit, 0, i)
+            add_to_offspring(offspring2, parents, not parent_to_inherit, 1, i)
+
+        return offspring1, offspring2
+
+    def xo(parent1, parent2):
+        flat_parent1 = flatten_routes(parent1)
+        flat_parent2 = flatten_routes(parent2)
+
+        flat_offspring1, flat_offspring2 = seq_xo(flat_parent1, flat_parent2)
+
+        flat_offspring1 = repair_pickup(flat_offspring1, data)
+        flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
+        flat_offspring1 = fill_missing_deliveries(flat_offspring1, data)
+        flat_offspring1 = remove_duplicates(flat_offspring1)
+
+        flat_offspring2 = repair_pickup(flat_offspring2, data)
+        flat_offspring2 = fill_missing_pickups(flat_offspring2, data)
+        flat_offspring2 = fill_missing_deliveries(flat_offspring2, data)
+        flat_offspring2 = remove_duplicates(flat_offspring2)
+
+        offspring1 = reconstruct_routes(flat_offspring1)
+        offspring2 = reconstruct_routes(flat_offspring2)
+
+        return offspring1, offspring2
+
+    return xo
+
+
 def same_size_flat(f_parent1, f_parent2):
     while len(f_parent1)!= len(f_parent2):
         if len(f_parent1)< len(f_parent2):
