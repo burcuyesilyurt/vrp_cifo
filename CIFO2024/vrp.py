@@ -54,7 +54,7 @@ if __name__ == "__main__":
     # TODO change mut prob when mutation is implemented for our structure
     P.evolve(gens=100,
              xo_prob=1,
-             mut_prob=0,
+             mut_prob=0.15,
              select=tournament_sel,
              xo=vrp_single_point_xo(data),
              mutate=inversion_mutation,
