@@ -41,11 +41,16 @@ def cycle_xo(p1, p2):
         val2 = p2[index]
 
         # copy the cycle elements
+        count = 0
         while val1 != val2:
             offspring1[index] = p1[index]
             offspring2[index] = p2[index]
             val2 = p2[index]
             index = p1.index(val2)
+            count += 1
+            if count >30:
+                print("entro")
+                break
 
         # copy the rest
         for element in offspring1:
