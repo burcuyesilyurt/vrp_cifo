@@ -13,12 +13,10 @@ def swap_mutation(individual):
     mut_list_index = randrange(len(individual))
     chosen_list = individual[mut_list_index]
 
-    # Ensure chosen_list has more than 1 element for a meaningful swap
     while len(chosen_list) <= 1:
         mut_list_index = randrange(len(individual))
         chosen_list = individual[mut_list_index]
 
-    # Perform the swap mutation on the chosen list
     mut_indexes = sample(range(len(chosen_list)), 2)
     chosen_list[mut_indexes[0]], chosen_list[mut_indexes[1]] = chosen_list[mut_indexes[1]], chosen_list[mut_indexes[0]]
 
