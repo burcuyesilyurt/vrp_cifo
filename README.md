@@ -46,7 +46,7 @@ The fitness function takes into account the following variables:
 * XX
 
 ## Comments
-
+We've implemented a random insertion to avoid introducing bias during the creation of the population. However, for introducing some variability and ensuring that information is distributed across the different generations, we've used several crossover and mutation functions. The combination of XX gave a good solution for the problem.
 
 ## External libraries
 * Matplotlib;
