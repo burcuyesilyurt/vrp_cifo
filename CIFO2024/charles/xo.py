@@ -2,7 +2,7 @@ import random
 from copy import copy
 from random import randint, sample, uniform
 
-from charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup
+from charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup, repair_routes_random
 
 
 def single_point_xo(parent1, parent2):
@@ -159,11 +159,6 @@ def vrp_xo(data, max_vehicles, xo_operation):
 
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
-        #check_if(offspring1, flat_offspring1)
-        #check_if(offspring2, flat_offspring2)
-        
-       # print(flat_offspring1, flat_offspring2)
-        #print(offspring1, offspring2)
         
         offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
         
@@ -171,6 +166,26 @@ def vrp_xo(data, max_vehicles, xo_operation):
 
     return xo
 
+
+def vrp_xo_random(data, max_vehicles, xo_operation):
+    def xo(parent1, parent2):
+        flat_parent1 = flatten_routes(parent1)
+        flat_parent2 = flatten_routes(parent2)
+        flat_parent1, flat_parent2 = same_size_flat(flat_parent1, flat_parent2)
+
+        flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
+
+        flat_offspring1 = repair_routes_random(flat_offspring2, data)
+        flat_offspring2 = repair_routes_random(flat_offspring2, data)
+
+        offspring1 = reconstruct_routes(flat_offspring1)
+        offspring2 = reconstruct_routes(flat_offspring2)
+
+        offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
+
+        return offspring1, offspring2
+
+    return xo
 
 def sequential_constructive_xo(data):
     def add_to_offspring(offspring, parents, parent_to_inherit, main_parent_index, i):
