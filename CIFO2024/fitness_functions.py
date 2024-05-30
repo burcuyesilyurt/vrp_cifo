@@ -8,29 +8,48 @@ def get_fitness(data):
         # We can try weighted sum or pareto front here
         # Penalize if the first point is not the depot
         fitness_time = 0
+        size = len(individual.representation)
+        fitness_capacity = 0
         for route in individual.representation:
+            
             if not route:
+                size -= 1
                 continue
 
-            if has_pickup_violation(route, data):
-                return 500000000
+            #if has_pickup_violation(route, data):
+             #   return 500000000
 
             fitness_time += get_fitness_time(route, data)
-
-        return fitness_time
+            fitness_capacity += get_fitness_capacity(route,data)
+            
+                
+        return (fitness_time/size)+fitness_capacity
 
     return get_overall_fitness
 
 def get_fitness_capacity(route, data):
-    pass
-
+    
+    cars_capacity = 100
+    car = 0
+    max_capacity = False
+    for rep in route:
+       car = car + float(data[rep][4])
+       if car > cars_capacity:
+           max_capacity = True
+           break
+    if max_capacity:
+        
+        return 1000000
+    else:
+        return 1
+    
 
 def get_fitness_time(route, data):
     # Assign d0 to be equals the depot
     d0 = data[0]
 
     time_error = False
-    current_time = 0.0
+    current_time = 0
     delivery_first = 100000
     battery = 77.75
 
@@ -57,26 +76,26 @@ def get_fitness_time(route, data):
 
         delivery_first = rep
 
-        current_time += service_time
+        #current_time += service_time
 
-        if 'S' in data[rep][0]:
-            time_charging = (77.75 - battery) * 3.47
-            current_time += time_charging
+        #if 'S' in data[rep][0]:
+         #   time_charging = (77.75 - battery) * 3.47
+          #  current_time += time_charging
 
         # print(rep,' ', delivery_first, ' ', d, ' ', current_time, ' ', time_charging, ' ', service_time, ' ', ready_time)
 
     distance = euclidean_distance(data[rep], d0)
     battery -= distance
     current_time += distance
+    
+    #if float(d0[6]) < current_time:
+     #   time_error = True
+        
+    #if time_error:
+        
+     #   return 1000000
 
-    if float(d0[6]) < current_time:
-        time_error = True
-
-    if time_error:
-        return 1000000
-
-    else:
-        return current_time
+    return current_time
 
 
 def get_fitness_vehicle_battery(route, data):
