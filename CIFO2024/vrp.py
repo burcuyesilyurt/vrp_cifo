@@ -45,7 +45,7 @@ if __name__ == "__main__":
     # TODO change mut prob when mutation is implemented for our structure
     P.evolve(gens=500,
              xo_prob=1,
-             mut_prob=0.15,
+             mut_prob=0.20,
              select=tournament_sel,
              xo=vrp_xo(data, max_vehicles, single_point_xo),
              #xo=vrp_xo_random(data, max_vehicles, single_point_xo),

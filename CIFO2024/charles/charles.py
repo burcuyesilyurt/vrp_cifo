@@ -120,12 +120,16 @@ class Population:
 
 
             self.individuals = new_pop
-
+            
             if self.optim == "max":
                 print(f"Best individual of gen #{i + 1}: {max(self, key=attrgetter('fitness'))}")
             elif self.optim == "min":
                 minimum = min(self, key=attrgetter('fitness'))
-                print(f"Best individual of gen #{i + 1}: {len(minimum.representation), minimum.representation, minimum.fitness}")
+                number_rep = 0
+                for m in minimum.representation:
+                    if len(m) != 0:
+                        number_rep += 1
+                print(f"Best individual of gen #{i + 1}: {number_rep, minimum.representation, minimum.fitness}")
 
 
     def __len__(self):
