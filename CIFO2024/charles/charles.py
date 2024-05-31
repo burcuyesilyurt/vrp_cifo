@@ -1,7 +1,8 @@
 from operator import attrgetter
 from random import shuffle, choice, sample, random
 from copy import copy
-
+import csv
+import os
 
 class Individual:
     # we always initialize
@@ -75,63 +76,73 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, xo_prob, mut_prob, select, xo, mutate, elitism):
+    def evolve(self, gens, xo_prob, mut_prob, select, xo, mutate, elitism,iter,x_name):
+         
+        with open(os.path.join('CIFO2024', 'evolution_data.csv'), mode='a', newline='') as csv_file:
+            writer = csv.writer(csv_file)
+            if csv_file.tell() == 0:  # Check if file is empty
+                writer.writerow(['Iteration','Generation', 'Max Vehicles', 'Fitness',  'Selection', 'Crossover', 'Mutation'])
+
         # gens = 100
-        for i in range(gens):
-            new_pop = []
+            for i in range(gens):
+                new_pop = []
 
-            if elitism:
+                if elitism:
+                    if self.optim == "max":
+                        elite = copy(max(self.individuals, key=attrgetter('fitness')))
+                    elif self.optim == "min":
+                        elite = copy(min(self.individuals, key=attrgetter('fitness')))
+
+                    #new_pop.append(elite)
+
+                while len(new_pop) < self.size:
+                    # selection
+                    parent1, parent2 = select(self), select(self)
+                    # xo with prob
+                    if random() < xo_prob:
+                        offspring1, offspring2 = xo(parent1, parent2)
+                    # replication
+                    else:
+                        offspring1, offspring2 = parent1, parent2
+                    # mutation with prob
+                    if random() < mut_prob:
+                        offspring1 = mutate(offspring1)
+                    if random() < mut_prob:
+                        offspring2 = mutate(offspring2)
+
+                    new_pop.append(Individual(representation=offspring1))
+                    if len(new_pop) < self.size:
+                        new_pop.append(Individual(representation=offspring2))
+
+                if elitism:
+                    if self.optim == "max":
+                        worst = min(new_pop, key=attrgetter('fitness'))
+                        if elite.fitness > worst.fitness:
+                            new_pop.pop(new_pop.index(worst))
+                            new_pop.append(elite)
+                    if self.optim == "min":
+                        worst = max(new_pop, key=attrgetter('fitness'))
+                        if elite.fitness < worst.fitness:
+                            new_pop.pop(new_pop.index(worst))
+                            new_pop.append(elite)
+
+
+                self.individuals = new_pop
+
+                               
                 if self.optim == "max":
-                    elite = copy(max(self.individuals, key=attrgetter('fitness')))
+                    print(f"Best individual of gen #{i + 1}: {max(self, key=attrgetter('fitness'))}")
                 elif self.optim == "min":
-                    elite = copy(min(self.individuals, key=attrgetter('fitness')))
+                    minimum = min(self, key=attrgetter('fitness'))
+                    number_rep = 0
+                    for m in minimum.representation:
+                        if len(m) != 0:
+                            number_rep += 1
 
-                #new_pop.append(elite)
-
-            while len(new_pop) < self.size:
-                # selection
-                parent1, parent2 = select(self), select(self)
-                # xo with prob
-                if random() < xo_prob:
-                    offspring1, offspring2 = xo(parent1, parent2)
-                # replication
-                else:
-                    offspring1, offspring2 = parent1, parent2
-                # mutation with prob
-                if random() < mut_prob:
-                    offspring1 = mutate(offspring1)
-                if random() < mut_prob:
-                    offspring2 = mutate(offspring2)
-
-                new_pop.append(Individual(representation=offspring1))
-                if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2))
-
-            if elitism:
-                if self.optim == "max":
-                    worst = min(new_pop, key=attrgetter('fitness'))
-                    if elite.fitness > worst.fitness:
-                        new_pop.pop(new_pop.index(worst))
-                        new_pop.append(elite)
-                if self.optim == "min":
-                    worst = max(new_pop, key=attrgetter('fitness'))
-                    if elite.fitness < worst.fitness:
-                        new_pop.pop(new_pop.index(worst))
-                        new_pop.append(elite)
-
-
-            self.individuals = new_pop
-            
-            if self.optim == "max":
-                print(f"Best individual of gen #{i + 1}: {max(self, key=attrgetter('fitness'))}")
-            elif self.optim == "min":
-                minimum = min(self, key=attrgetter('fitness'))
-                number_rep = 0
-                for m in minimum.representation:
-                    if len(m) != 0:
-                        number_rep += 1
-                
-                print(f"Best individual of gen #{i + 1}: {number_rep, minimum.representation, minimum.fitness}")
+                    # Write data to CSV
+                    writer.writerow([iter,i + 1, number_rep, minimum.fitness,  select.__name__, x_name, mutate.__name__])
+                    
+                    print(f"Best individual of gen #{i + 1}: {number_rep, minimum.representation, minimum.fitness}")
 
 
     def __len__(self):
