@@ -43,7 +43,7 @@ Individual.get_fitness = get_fitness(data)
 if __name__ == "__main__":
     P = Population(size=20, optim="min", init_func=random_initialization(data, max_vehicles))
     # TODO change mut prob when mutation is implemented for our structure
-    P.evolve(gens=500,
+    P.evolve(gens=50,
              xo_prob=1,
              mut_prob=0.20,
              select=tournament_sel,

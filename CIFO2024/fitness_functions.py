@@ -23,7 +23,7 @@ def get_fitness(data):
             fitness_capacity += get_fitness_capacity(route,data)
             
                 
-        return (fitness_time/size)+fitness_capacity
+        return ((fitness_time)*(size))/1000+fitness_capacity
 
     return get_overall_fitness
 
@@ -39,7 +39,7 @@ def get_fitness_capacity(route, data):
            break
     if max_capacity:
         
-        return 1000000
+        return 10000000000000000000
     else:
         return 1
     
@@ -52,7 +52,8 @@ def get_fitness_time(route, data):
     current_time = 0
     delivery_first = 100000
     battery = 77.75
-
+    return_time = 0
+    
     for rep in route:
         ready_time = float(data[rep][5])
         due_date = float(data[rep][6])
@@ -72,6 +73,7 @@ def get_fitness_time(route, data):
             current_time = ready_time
 
         if due_date < current_time:
+
             delay += (current_time-due_date)
 
         delivery_first = rep
@@ -91,10 +93,9 @@ def get_fitness_time(route, data):
     #if float(d0[6]) < current_time:
      #   time_error = True
         
-    if delay > 0:
-        current_time += delay*10
-        
-    return current_time
+   
+
+    return (current_time*0.3 + delay*0.7)
 
 
 def get_fitness_vehicle_battery(route, data):
