@@ -131,10 +131,7 @@ def get_fitness_time(route, data,charge):
      #   time_error = True
         
    
-    print("--------------------")
-    print(current_time, delay)
-    print(current_time*0.3, delay*0.7)
-    print("---------------------")
+    
     return (current_time*0.3 + delay*0.7)
 
 
