@@ -25,42 +25,42 @@ The route of the different vehicles is defined by the inner lists, within the ma
 - The order only can be picked up if the time window is ready for pickup;
 - The order must be picked up before delivery.
 
-### Personalized parameters
-* Data file;
-* Number of vehicles;
-* ...
-
 ### Fitness Function
 The fitness function takes into account the following variables:
-* Capacity - penalize the exceeded capacity level;
-* Battery level;
-* Time window;
-* Distance - shortest distance is preferable.
+* Capacity - `get_fitness_capacity()`;
+* Battery level - `get_fitness_batery()`;
+* Time - `get_fitness_time()`.
 
 ### Mutation
-* `swap_mutation()` - Swaps elements within each sublist.
-* `inversion_mutation()` - Reverts a portion of the representation.
+* `swap_mutation()`;
+* `inversion_mutation()`.
 
 ### Crossover
-* XX
-* XX
-* XX
+* Single-point crossover - `single_point_xo()`;
+* Cycle crossover - `cycle_xo()`;
+* Partially-mapped crossover - `vrp_pmx()`;
+* Constructive crossover - `sequential_constructive_xo()` .
+
+### Selection
+* Tournament Selection;
+* Fitness Proportionate Selection.
 
 ## Comments
 We've implemented a random insertion to avoid introducing bias during the creation of the population. However, for introducing some variability and ensuring that information is distributed across the different generations, we've used several crossover and mutation functions. The combination of XX gave a good solution for the problem.
 
 ## External libraries
 * Matplotlib;
+* Numpy;
 * ...
 
 ## Authors
-| Name              | ID        |
-|-------------------|-----------|
-| Devora Cavaleiro  | 20230794  |
-| Carlos Rodrigues  | 20230543  |
-| David Guarin      |           |
-| Burcu             |           |
-| Lia               |           |
+| Name             | ID       |
+|------------------|----------|
+| Devora Cavaleiro | 20230794 |
+| Carlos Rodrigues | 20230543 |
+| David Guarin     | 20230602 |
+| Burcu Yesilyurt  | 20230763 |
+| Lia Henao        | 20230600 |
 
 
 ## References
