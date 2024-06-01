@@ -1,13 +1,9 @@
 from utils import euclidean_distance
-from restrictions import has_pickup_violation, has_capacity_violation
 from read_data import *
 
 
 def get_fitness(data, charge):
     def get_overall_fitness(individual):
-        #TODO implement the fitness function considering the different objectives
-        # We can try weighted sum or pareto front here
-        # Penalize if the first point is not the depot
         fitness_time = 0
         size = len(individual.representation)
         fitness_capacity = 0
