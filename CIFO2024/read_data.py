@@ -1,6 +1,4 @@
-import numpy as np
 import os
-import math
 
 # Indicate the instance you want to read
 #instance = 'lc101.txt'
@@ -49,7 +47,7 @@ def read_vrp_parameters(file_path):
                 value = float(parts[-1])
                 vehicle_params[param_name] = value
 
-    return  data, vehicle_params
+    return data, vehicle_params
 
 data, vehicle_params = read_vrp_parameters(file_path)
 
