@@ -1,5 +1,6 @@
 from utils import euclidean_distance
 from restrictions import has_pickup_violation, has_capacity_violation
+from read_data import *
 
 
 def get_fitness(data, charge):
@@ -29,7 +30,7 @@ def get_fitness(data, charge):
 
 def get_fitness_capacity(route, data):
     
-    cars_capacity = 100
+    cars_capacity = vehicle_params['Vehicle battery capacity']
     car = 0
     max_capacity = False
     for rep in route:
@@ -51,7 +52,7 @@ def get_fitness_time(route, data,charge):
     time_error = False
     current_time = 0
     delivery_first = 100000
-    battery = 77.75
+    battery = vehicle_params['Vehicle battery capacity']
     return_time = 0
     
     for rep in route:
@@ -82,7 +83,7 @@ def get_fitness_time(route, data,charge):
                             min_distance = d
                             
                     distance += min_distance
-                    battery = 77.75
+                    battery = vehicle_params['Vehicle battery capacity']
                 else:
                     next_distance = euclidean_distance(data[rep], data[rep+1])
                     if (battery-next_distance) < 0:
@@ -96,7 +97,7 @@ def get_fitness_time(route, data,charge):
                                 min_distance = d
                                 station_name = charge_station[0]
                         distance += min_distance
-                        battery = 77.75
+                        battery = vehicle_params['Vehicle battery capacity']
             current_time += distance
         else:
 
@@ -139,7 +140,7 @@ def get_fitness_vehicle_battery(route, data):
     # Assign d0 to be equals the depot
     d0 = data[0]
 
-    battery = 77.75
+    battery = vehicle_params['Vehicle battery capacity']
     battery_consume = 0
     delivery_first = 1000
     battery_consumption = 1
