@@ -1,33 +1,36 @@
 # Project of Computational Intelligence for Optimization - 2024
 ## Vehicle Routing Problem (vrp)
-This project tries to solve the optimization problem of the vrp, with genetic algorithms. The goal is to minimize the distance made by the car, while making the delivers of all the packages. Meanwhile, the car still need to have battery to return to depot.
+This project tries to solve the optimization problem of the vrp, with genetic algorithms. The goal is to minimize the distance made by the car and the number of cars been used, while making the delivers for all the packages, while considering certain constraints.
 
 ## Problem definition
 ### Entities
 * Vehicles;
-* Customers;
+* Pickup and delivery locations;
 * Recharging stations;
 * Depot.
 
 ### Representation
 In order to make our data available to the algorithm we have to represent:
 * **CPX** = Customers Pickup (where X represents the indexed customer);
-* **CDX** = Customer Delivery;
+* **CDX** = Customer Delivery.
 
-So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[CP1,CP2,CD1,CP3,CD3,CD2]]`.
-The route of the different vehicles is defined by the inner lists, within the main list.
+For example: A scenario that uses one vehicle and this car has to deliver to customer 1,2 and 3 can be represented as follows: `[[CP1,CP2,CD1,CP3,CD3,CD2]]`.
+The route of the different vehicles is defined by the inner lists, within the main list. In other words, we have a list, which contains a group of list each represent different cars and its correspondig routes. For example we may have [[CP1, CD1, CP2, CD2], [CP3, CD3]]. Here we have two cars, two different routes, car number is delivering the package to customer 1 and two, and the second car is delivering the packages to customer 3. 
 
 ### Problem premises
 - All routes must start and end at Depot 1;
-- All picked up orders must be delivery;
-- The order only can be picked up if the time window is ready for pickup;
-- The order must be picked up before delivery.
+- All picked up orders must be delivered, to the corresponding customer;
+- The order only can be picked up if the time window is ready for the pickup;
+- The order must be picked up before delivery;
+- A car must not exceed its package capacity;
+- A car cannot exceed its battery capacity, if its close to running out of battery it should go to charging station. 
+
 
 ### Fitness Function
 The fitness function takes into account the following variables:
 * Capacity - `get_fitness_capacity()`;
-* Battery level - `get_fitness_batery()`;
 * Time - `get_fitness_time()`.
+
 
 ![](CIFO2024/images/equation.png)
 
@@ -38,7 +41,7 @@ The fitness function takes into account the following variables:
 ### Crossover
 * Single-point crossover - `single_point_xo()`;
 * Cycle crossover - `cycle_xo()`;
-* Partially-mapped crossover - `vrp_pmx()`;
+* Partially-mapped crossover - `pmx()`;
 * Constructive crossover - `sequential_constructive_xo()` .
 
 ### Selection
