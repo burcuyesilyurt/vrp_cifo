@@ -269,13 +269,6 @@ def fill_missing_deliveries(offspring, data):
 
     return result
 
-def fill_missing_pickups_randomly(offspring, data):
-    pass
-
-
-def fill_missing_deliveries_randomly(offspring, data):
-    pass
-
 
 def remove_duplicates(offspring):
     """

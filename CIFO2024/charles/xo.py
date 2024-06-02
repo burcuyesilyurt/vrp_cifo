@@ -1,6 +1,6 @@
 import random
 from random import randint, sample, uniform
-from xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup, repair_routes_random
+from CIFO2024.charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup, repair_routes_random
 
 
 def single_point_xo(parent1, parent2):
