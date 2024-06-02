@@ -31,6 +31,8 @@ The fitness function takes into account the following variables:
 * Battery level - `get_fitness_batery()`;
 * Time - `get_fitness_time()`.
 
+![](CIFO2024/images/equation.png)
+
 ### Mutation
 * `swap_mutation()`;
 * `inversion_mutation()`.

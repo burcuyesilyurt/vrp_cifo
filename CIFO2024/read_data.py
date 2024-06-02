@@ -3,7 +3,7 @@ import os
 # Indicate the instance you want to read
 #instance = 'lc101.txt'
 instance = 'c202C16.txt'
-file_path = os.path.join('CIFO2024', 'goeke-2018',instance)
+file_path = os.path.join('.', 'goeke-2018',instance)
 
 # Read the parameters of the TXT file
 def read_vrp_parameters(file_path):

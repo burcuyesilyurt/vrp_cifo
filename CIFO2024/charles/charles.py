@@ -78,7 +78,7 @@ class Population:
 
     def evolve(self, gens, xo_prob, mut_prob, select, xo, mutate, elitism,iter,x_name):
          
-        with open(os.path.join('CIFO2024', 'evolution_data.csv'), mode='a', newline='') as csv_file:
+        with open(os.path.join('Plot VRP', 'evolution_data.csv'), mode='a', newline='') as csv_file:
             writer = csv.writer(csv_file)
             if csv_file.tell() == 0:  # Check if file is empty
                 writer.writerow(['Iteration','Generation', 'Max Vehicles', 'Fitness',  'Selection', 'Crossover', 'Mutation'])
