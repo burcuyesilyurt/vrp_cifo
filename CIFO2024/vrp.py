@@ -36,7 +36,7 @@ if __name__ == "__main__":
     for s in selection:
         for x_func, x_name in xo:
             for m in mutation:
-                # Print teh configurations
+                # Print the configurations
                 for iter in range(2):
                     print(f"Selection: {s.__name__}, Crossover: {x_name}, Mutation: {m.__name__}")
                     # Initiate the population

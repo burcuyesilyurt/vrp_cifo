@@ -125,9 +125,11 @@ def vrp_xo(data, max_vehicles, xo_operation):
         Returns:
             tuple: Two offspring generated from the parents.
         """
-        # Flatten the routes of the parents
+        # Flatten the routes of the parents, converts lists inside a list to just a list 
+        #[[],[],[]] to []
         flat_parent1 = flatten_routes(parent1)
         flat_parent2 = flatten_routes(parent2)
+        #Verifies same length after conversion
         flat_parent1, flat_parent2 = same_size_flat(flat_parent1,flat_parent2)
         # Apply the crossover operation
         flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
@@ -142,9 +144,10 @@ def vrp_xo(data, max_vehicles, xo_operation):
         flat_offspring2 = fill_missing_deliveries(flat_offspring2, data)
         flat_offspring2 = remove_duplicates(flat_offspring2)
         # Reconstruct the routes
+        #from [] to [[],[]]
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
-        # Ensure the offspring have the correct number of routes
+        # Ensure the offspring have the correct number of routes, have the same size. 
         offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
         
         return offspring1, offspring2
@@ -173,7 +176,7 @@ def vrp_xo_random(data, max_vehicles, xo_operation):
 
         flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
 
-        # Repair the offspring using random repair functions
+        # Repair the offspring using random repair functions, 
         flat_offspring1 = repair_routes_random(flat_offspring2, data)
         flat_offspring2 = repair_routes_random(flat_offspring2, data)
         # Reconstruct the routes from the flattened routes before
