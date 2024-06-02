@@ -103,16 +103,35 @@ def pmx(p1, p2):
 
 
 def vrp_xo(data, max_vehicles, xo_operation):
+    """
+    Applies a crossover operation to two parents to produce two offspring, ensuring the offspring are valid VRP solutions by performing repairs.
 
+    Args:
+        data (list): List of data representing each locality.
+        max_vehicles (int): The maximum number of vehicles available.
+        xo_operation (function): The crossover operation to be applied to the parents.
+
+    Returns:
+        function: The crossover function that takes two parents and returns two offspring.
+    """
     def xo(parent1, parent2):
-        
-        
+        """
+        The crossover function that takes two parents and returns two offspring.
+
+        Args:
+            parent1 (list): The first parent.
+            parent2 (list): The second parent.
+
+        Returns:
+            tuple: Two offspring generated from the parents.
+        """
+        # Flatten the routes of the parents
         flat_parent1 = flatten_routes(parent1)
         flat_parent2 = flatten_routes(parent2)
         flat_parent1, flat_parent2 = same_size_flat(flat_parent1,flat_parent2)
-        
+        # Apply the crossover operation
         flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
-
+        # Repair the offspring to ensure they are valid VRP solutions
         flat_offspring1 = repair_pickup(flat_offspring1, data)
         flat_offspring1 = fill_missing_pickups(flat_offspring1, data)
         flat_offspring1 = fill_missing_deliveries(flat_offspring1, data)
@@ -122,10 +141,10 @@ def vrp_xo(data, max_vehicles, xo_operation):
         flat_offspring2 = fill_missing_pickups(flat_offspring2, data)
         flat_offspring2 = fill_missing_deliveries(flat_offspring2, data)
         flat_offspring2 = remove_duplicates(flat_offspring2)
-
+        # Reconstruct the routes
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
-        
+        # Ensure the offspring have the correct number of routes
         offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
         
         return offspring1, offspring2
@@ -134,19 +153,33 @@ def vrp_xo(data, max_vehicles, xo_operation):
 
 
 def vrp_xo_random(data, max_vehicles, xo_operation):
+    """
+    Applies a crossover operation to two parents to produce two offspring, ensuring the offspring are valid VRP solutions by performing random repairs.
+
+    Args:
+        data (list): List of data representing each locality.
+        max_vehicles (int): The maximum number of vehicles available.
+        xo_operation (function): The crossover operation to be applied to the parents.
+
+    Returns:
+        function: The crossover function that takes two parents and returns two offspring.
+    """
+
     def xo(parent1, parent2):
+        # Flatten the routes of the parents
         flat_parent1 = flatten_routes(parent1)
         flat_parent2 = flatten_routes(parent2)
         flat_parent1, flat_parent2 = same_size_flat(flat_parent1, flat_parent2)
 
         flat_offspring1, flat_offspring2 = xo_operation(flat_parent1, flat_parent2)
 
+        # Repair the offspring using random repair functions
         flat_offspring1 = repair_routes_random(flat_offspring2, data)
         flat_offspring2 = repair_routes_random(flat_offspring2, data)
-
+        # Reconstruct the routes from the flattened routes before
         offspring1 = reconstruct_routes(flat_offspring1)
         offspring2 = reconstruct_routes(flat_offspring2)
-
+        # Ensure the offspring have the correct number of routes
         offspring1, offspring2 = same_size(offspring1, offspring2, max_vehicles)
 
         return offspring1, offspring2
@@ -154,7 +187,26 @@ def vrp_xo_random(data, max_vehicles, xo_operation):
     return xo
 
 def sequential_constructive_xo(data):
+    """
+    Implements the Sequential Constructive Crossover (SCX) operation for the Vehicle Routing Problem (VRP).
+
+    Args:
+        data (list): List of data representing each locality.
+
+    Returns:
+        function: The crossover function that takes two parents and returns two offspring.
+    """
     def add_to_offspring(offspring, parents, parent_to_inherit, main_parent_index, i):
+        """
+        Adds elements to the offspring based on the parent routes and the inheritance strategy.
+
+        Args:
+            offspring (list): The current offspring being constructed.
+            parents (list): The parent routes.
+            parent_to_inherit (bool): Boolean indicating which parent to inherit from.
+            main_parent_index (int): Index of the main parent (0 or 1).
+            i (int): Current index in the parent routes.
+        """
         # "main" delimiter have precedence in order to maintain route sizes
         if parents[main_parent_index][i] == 0:
             offspring.append(0)
@@ -168,6 +220,16 @@ def sequential_constructive_xo(data):
         offspring.append(parents[parent_to_inherit][i])
 
     def seq_xo(parent1, parent2):
+        """
+        Applies the sequential constructive crossover to two parents to produce two offspring.
+
+        Args:
+            parent1 (list): The flattened route representation of the first parent.
+            parent2 (list): The flattened route representation of the second parent.
+
+        Returns:
+            tuple: Two offspring generated from the parents.
+        """
         assert len(parent1) == len(parent2)
 
         offspring1 = []
@@ -207,6 +269,16 @@ def sequential_constructive_xo(data):
 
 
 def same_size_flat(f_parent1, f_parent2):
+    """
+    Ensures that two flattened parent routes have the same length by padding the shorter one with zeros.
+
+    Args:
+        f_parent1 (list): The flattened route representation of the first parent.
+        f_parent2 (list): The flattened route representation of the second parent.
+
+    Returns:
+        tuple: The adjusted parent routes of the same length.
+    """
     while len(f_parent1)!= len(f_parent2):
         if len(f_parent1)< len(f_parent2):
             f_parent1.append(0)
@@ -215,7 +287,17 @@ def same_size_flat(f_parent1, f_parent2):
 
     return f_parent1, f_parent2
 def same_size(parent1, parent2, max_v):
-    
+    """
+    Ensures that two parent routes have the same number of routes and do not exceed the maximum number of vehicles.
+
+    Args:
+        parent1 (list): The route representation of the first parent.
+        parent2 (list): The route representation of the second parent.
+        max_v (int): The maximum number of vehicles allowed.
+
+    Returns:
+        tuple: The adjusted parent routes of the same size.
+    """
     count = 0
     while len(parent1) != len(parent2):
         if len(parent1)>max_v and len(parent1)>0:
