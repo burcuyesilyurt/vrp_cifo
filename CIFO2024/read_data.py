@@ -1,10 +1,9 @@
-import numpy as np
 import os
-import math
 
 # Indicate the instance you want to read
-instance = 'c103C6.txt'
-file_path = os.path.join('..', instance)
+#instance = 'lc101.txt'
+instance = 'c202C16.txt'
+file_path = os.path.join('CIFO2024', 'goeke-2018',instance)
 
 # Read the parameters of the TXT file
 def read_vrp_parameters(file_path):
@@ -19,7 +18,6 @@ def read_vrp_parameters(file_path):
         lines = file.readlines()
     data = []
     vehicle_params = {}
-    d0 = None
 
     for line in lines:
         stripped_line = line.strip()
@@ -37,18 +35,21 @@ def read_vrp_parameters(file_path):
                     float(parts[7]),  # ServiceTime
                     parts[8]  # PartnerID
                 ]
-                if parts[0] == 'D0':
-                    d0 = entry
-                else:
-                    data.append(entry)
+                # if parts[0] == 'D0':
+                #     d0 = entry
+                # else:
+                #     data.append(entry)
+
+                data.append(entry)    
+
             elif ":" in parts:
                 param_name = " ".join(parts[:-2])
                 value = float(parts[-1])
                 vehicle_params[param_name] = value
 
-    return d0, data, vehicle_params
+    return data, vehicle_params
 
-d0, data, vehicle_params = read_vrp_parameters(file_path)
+data, vehicle_params = read_vrp_parameters(file_path)
 
 print('--------------------------------------------------')
 print("Vehicle Parameters:")
@@ -56,10 +57,9 @@ for key, value in vehicle_params.items():
     print(f"{key}: {value}")
 
 print('--------------------------------------------------')
-print('D0:', d0)
-print('Data:', data)
+print("data:")
+print(data)
 
-
-print('---------- Prueba --------')
+print('---------- Test --------')
 print('Vehicle battery capacity:', vehicle_params['Vehicle battery capacity'])
 

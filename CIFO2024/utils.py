@@ -1,10 +1,11 @@
 
-#import matplotlib.pyplot as plt
-#from read_data import data, d0
-#import matplotlib.image as mpimg
-#from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import matplotlib.pyplot as plt
+from read_data import data
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 import math
+import os
 
 
 
@@ -14,22 +15,18 @@ def euclidean_distance(a, b):
     return math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
 
 
-def plot_vrp_solution(solution, all_points):
-    x_coords = [all_points[i][2] for i in solution]
-    y_coords = [all_points[i][3] for i in solution]
-
+def plot_vrp_solution(routes, all_points):
     fig, ax = plt.subplots(figsize=(12, 8))
 
-    ax.plot(x_coords, y_coords, 'o--', linewidth=2, markersize=8, label='Path', color='black')
+    colors = ['black', 'red', 'blue', 'green', 'orange', 'purple']  # Lista de colores para diferentes rutas
+    depot_img = plt.imread(os.path.join('CIFO2024','depot.png'))
+    battery_img = plt.imread(os.path.join('CIFO2024','battery.png'))
+    box_img = plt.imread(os.path.join('CIFO2024','box.png'))
 
     def add_image(ax, img, xy, zoom=0.1):
         imagebox = OffsetImage(img, zoom=zoom)
         ab = AnnotationBbox(imagebox, xy, frameon=False)
         ax.add_artist(ab)
-
-    depot_img = plt.imread('depot.png')
-    battery_img = plt.imread('battery.png')
-    box_img = plt.imread('box.png')
 
     def get_image_type(point):
         if point[1] == 'f':
@@ -39,24 +36,35 @@ def plot_vrp_solution(solution, all_points):
         else:
             return box_img
 
-    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
-        img = get_image_type(all_points[solution[i]])
-        if img is not depot_img:
-            add_image(ax, img, (x, y), zoom=0.1)
+    for route_idx, route in enumerate(routes):
+        if not route:
+            continue
+        route = [0] + route + [0]  # Añadir el depósito al inicio y al final de cada ruta
+        x_coords = [all_points[i][2] for i in route]
+        y_coords = [all_points[i][3] for i in route]
 
-    for i in range(len(x_coords)-1):
-        ax.annotate('', xy=(x_coords[i+1], y_coords[i+1]), xytext=(x_coords[i], y_coords[i]),
-                    arrowprops=dict(arrowstyle='->', color='black', lw=2))
+        color = colors[route_idx % len(colors)]  # Seleccionar color para la ruta
 
-    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
-        img = get_image_type(all_points[solution[i]])
-        if img is depot_img:
-            add_image(ax, img, (x, y), zoom=0.1)
+        ax.plot(x_coords, y_coords, 'o--', linewidth=2, markersize=8, linestyle='--', label=f'Ruta {route_idx+1}', color=color)
 
-    for i, (x, y) in enumerate(zip(x_coords, y_coords)):
-        ax.text(x, y, f'{solution[i]}', fontsize=12, ha='right', va='bottom')
+        for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+            img = get_image_type(all_points[route[i]])
+            if img is not depot_img:
+                add_image(ax, img, (x, y), zoom=0.1)
 
-    ax.set_title('VRP Solution Path', fontsize=16)
+        for i in range(len(x_coords) - 1):
+            ax.annotate('', xy=(x_coords[i + 1], y_coords[i + 1]), xytext=(x_coords[i], y_coords[i]),
+                        arrowprops=dict(arrowstyle='->', color=color, lw=2))
+
+        for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+            img = get_image_type(all_points[route[i]])
+            if img is depot_img:
+                add_image(ax, img, (x, y), zoom=0.1)
+
+        for i, (x, y) in enumerate(zip(x_coords, y_coords)):
+            ax.text(x, y, f'{route[i]}', fontsize=12, ha='right', va='bottom')
+
+    ax.set_title('VRP Solution Paths', fontsize=16)
     ax.set_xlabel('X Coordinate', fontsize=14)
     ax.set_ylabel('Y Coordinate', fontsize=14)
 
@@ -66,11 +74,9 @@ def plot_vrp_solution(solution, all_points):
 
     plt.show()
 
+if __name__ == "__main__":
+    routes = [[], [], [], [12, 15], [], [], [], [], [], [], [19, 8], [], [], [], [], [], [], [], [], [9, 10], [], [], [], [], [], [7, 20], [], [], [], [], [21, 14, 13, 18, 16, 17], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [6, 11], [], [], [], [], [], [], [], [], [], []]
+    #all_points = [d0] + data
+    all_points = data
 
-
-
-# solution = [0, 7, 3, 1, 6, 5, 2, 8, 4]
-# all_points =  [d0] + data
-#
-# plot_vrp_solution(solution, all_points)
-
+    plot_vrp_solution(routes, all_points)
