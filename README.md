@@ -31,9 +31,27 @@ The fitness function takes into account the following variables:
 * Battery level - `get_fitness_batery()`;
 * Time - `get_fitness_time()`.
 
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    });
+  </script>
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+  </script>
+</head>
+<body>
+
 \[ 
 \text{Fitness} = \frac{\sum ((\text{Time} \times 0.3) + (\text{Delay} \times 0.7)) \times \text{Cars}}{1000} + \text{Capacity} 
 \]
+
+</body>
+</html>
+
 
 ### Mutation
 * `swap_mutation()`;
