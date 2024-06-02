@@ -1,7 +1,7 @@
 from charles.charles import Population, Individual
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
-from charles.xo import cycle_xo, pmx, vrp_xo, single_point_xo, vrp_xo_random
+from charles.xo import cycle_xo, pmx, vrp_xo, single_point_xo, vrp_xo_random, sequential_constructive_xo
 from CIFO2024.charles.fitness_functions import get_fitness
 from CIFO2024.charles.initializations import random_initialization
 from read_data import *
@@ -22,10 +22,11 @@ if __name__ == "__main__":
     mutation = [swap_mutation, inversion_mutation]
     # Crossover operators
     xo = [
+        (lambda: vrp_xo_random(data, max_vehicles, sequential_constructive_xo), "vrp_xo(sequential_constructive_xo)"),
         (lambda: vrp_xo(data, max_vehicles, cycle_xo), "vrp_xo(cycle_xo)"),
         (lambda: vrp_xo(data, max_vehicles, pmx), "vrp_xo(pmx)"),
         (lambda: vrp_xo_random(data, max_vehicles, single_point_xo), "vrp_xo(single_point_xo)"),
-    ]
+        ]
     # Selection operators
     selection = [fps, tournament_sel]
     # Iterate over operators
