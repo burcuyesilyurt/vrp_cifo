@@ -12,11 +12,9 @@ This project tries to solve the optimization problem of the vrp, with genetic al
 ### Representation
 In order to make our data available to the algorithm we have to represent:
 * **CPX** = Customers Pickup (where X represents the indexed customer);
-* **CD** = Customer Delivery;
-* **SX** = Recharging Stations (where X represents the indexed station);
-* **D1** = Depot (we're considering only one depot for simplicity).
+* **CDX** = Customer Delivery;
 
-So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[CP1,CP2,CD1,CP3,CD3,CD2]]`, where all routes will start with `D1` followed by the vehicle that will do that route.
+So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[CP1,CP2,CD1,CP3,CD3,CD2]]`.
 The route of the different vehicles is defined by the inner lists, within the main list.
 
 ### Problem premises

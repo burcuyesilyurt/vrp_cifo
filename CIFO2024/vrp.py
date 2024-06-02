@@ -1,13 +1,11 @@
 #update
-import random
-from random import sample
 
 from charles.charles import Population, Individual
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, inversion_mutation
-from charles.xo import cycle_xo, pmx, vrp_pmx, vrp_xo, sequential_constructive_xo, single_point_xo, vrp_xo_random
-from fitness_functions import get_fitness
-from initializations import random_initialization
+from charles.xo import cycle_xo, pmx, vrp_xo, single_point_xo, vrp_xo_random
+from CIFO2024.charles.fitness_functions import get_fitness
+from CIFO2024.charles.initializations import random_initialization
 from read_data import *
 
 

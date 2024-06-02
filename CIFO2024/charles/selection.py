@@ -37,6 +37,3 @@ def tournament_sel(population, tour_size=3):
         return max(tournament, key=attrgetter('fitness'))
     elif population.optim == "min":
         return min(tournament, key=attrgetter('fitness'))
-
-
-

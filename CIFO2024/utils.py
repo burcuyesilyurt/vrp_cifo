@@ -19,9 +19,9 @@ def plot_vrp_solution(routes, all_points):
     fig, ax = plt.subplots(figsize=(12, 8))
 
     colors = ['black', 'red', 'blue', 'green', 'orange', 'purple']  # Lista de colores para diferentes rutas
-    depot_img = plt.imread(os.path.join('CIFO2024','depot.png'))
-    battery_img = plt.imread(os.path.join('CIFO2024','battery.png'))
-    box_img = plt.imread(os.path.join('CIFO2024','box.png'))
+    depot_img = plt.imread(os.path.join('CIFO2024', 'images/depot.png'))
+    battery_img = plt.imread(os.path.join('CIFO2024', 'images/battery.png'))
+    box_img = plt.imread(os.path.join('CIFO2024', 'images/box.png'))
 
     def add_image(ax, img, xy, zoom=0.1):
         imagebox = OffsetImage(img, zoom=zoom)
