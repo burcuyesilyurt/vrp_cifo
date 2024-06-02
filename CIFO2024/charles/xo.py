@@ -102,20 +102,6 @@ def pmx(p1, p2):
     return o1, o2
 
 
-def vrp_pmx(parent1, parent2):
-
-    # Flatten the routes of both parents
-    flat_parent1 = flatten_routes(parent1)
-    flat_parent2 = flatten_routes(parent2)
-    
-    flat_offspring1, flat_offspring2 = pmx(flat_parent1, flat_parent2)
-
-    # Reconstruct routes for both offspring
-    offspring1 = reconstruct_routes(flat_offspring1)
-    offspring2 = reconstruct_routes(flat_offspring2)
-
-    return offspring1, offspring2
-
 def vrp_xo(data, max_vehicles, xo_operation):
 
     def xo(parent1, parent2):
