@@ -35,10 +35,6 @@ def read_vrp_parameters(file_path):
                     float(parts[7]),  # ServiceTime
                     parts[8]  # PartnerID
                 ]
-                # if parts[0] == 'D0':
-                #     d0 = entry
-                # else:
-                #     data.append(entry)
 
                 data.append(entry)    
 

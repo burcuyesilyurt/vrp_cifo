@@ -1,13 +1,16 @@
-from copy import copy, deepcopy
+from copy import deepcopy
 from random import randint
-
 
 def flatten_routes(individual):
     """
-    Flat the individual representation from 2D-array to 1D-array,
-    splitting the routes around 0s.
+    Flattens an individual's representation from a 2D-array to a 1D-array, splitting routes around 0s.
+    For example, [[1, 2], [3, 4]] will be flattened to [0, 1, 2, 0, 0, 3, 4, 0].
 
-     For instance, the individual [[1,2][3,4]] will be flattened to [0,1,2,0,0,3,4,0]
+    Args:
+        individual (list): The individual representation as a 2D-array.
+
+    Returns:
+        list: The flattened representation as a 1D-array.
     """
     flattened_parent = []
     for route in individual:
@@ -23,6 +26,15 @@ def flatten_routes(individual):
 
 
 def reconstruct_routes(flat_offspring):
+    """
+    Reconstructs an individual's representation from a flattened array back to a 2D-array.
+
+    Args:
+        flat_offspring (list): The flattened representation as a 1D-array.
+
+    Returns:
+        list: The reconstructed representation as a 2D-array.
+    """
     offspring = []
 
     current_route = []
@@ -36,6 +48,16 @@ def reconstruct_routes(flat_offspring):
     return offspring
 
 def repair_routes(flat_offspring, data):
+    """
+    Repairs the offspring by placing deliveries immediately after pickups.
+
+    Args:
+        flat_offspring (list): The flattened representation of the offspring.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The repaired offspring representation.
+    """
     offspring_repaired = repair_pickup(flat_offspring, data)
 
     offspring_w_pickups = fill_missing_pickups(offspring_repaired, data)
@@ -45,7 +67,16 @@ def repair_routes(flat_offspring, data):
     return offspring_no_duplicates
 
 def repair_routes_random(flat_offspring, data):
+    """
+    Repairs the offspring by placing deliveries randomly after pickups.
 
+    Args:
+        flat_offspring (list): The flattened representation of the offspring.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The repaired offspring representation.
+    """
     offspring_w_pickups = fill_missing_pickups_with_random(flat_offspring, data)
     offspring_w_deliveries = fill_missing_deliveries_with_random(offspring_w_pickups, data)
     offspring_repaired = repair_pickup_with_random(offspring_w_deliveries, data)
@@ -56,11 +87,14 @@ def repair_routes_random(flat_offspring, data):
 
 def repair_pickup(offspring, data):
     """
-    This function repairs the offspring by putting the delivery right after the pickup.
+    Repairs the offspring by placing the delivery right after the pickup.
 
-    :param offspring:
-    :param data:
-    :return:
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The repaired offspring representation.
     """
     result = []
 
@@ -79,14 +113,15 @@ def repair_pickup(offspring, data):
 
 def repair_pickup_with_random(offspring, data):
     """
-    This function repairs the offspring by putting the delivery in a random position after the pickup.
+    Repairs the offspring by putting the delivery in a random position after the pickup.
 
-    :param offspring:
-    :param data:
-    :return:
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The repaired offspring representation.
     """
-
-
     for i in range(len(offspring)):
         locality = offspring[i]
 
@@ -132,6 +167,16 @@ def repair_pickup_with_random(offspring, data):
     return [i for i in offspring if i is not None]
 
 def fill_missing_pickups(offspring, data):
+    """
+    Fills in missing pickups in the offspring.
+
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The offspring representation with missing pickups filled.
+    """
     pickups_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cp'}
     all_pickups_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cp'}
 
@@ -151,6 +196,16 @@ def fill_missing_pickups(offspring, data):
     return result
 
 def fill_missing_pickups_with_random(offspring, data):
+    """
+    Fills in missing pickups in the offspring with random positions.
+
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The offspring representation with missing pickups filled randomly.
+    """
     pickups_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cp'}
     all_pickups_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cp'}
 
@@ -171,6 +226,16 @@ def fill_missing_pickups_with_random(offspring, data):
     return result
 
 def fill_missing_deliveries_with_random(offspring, data):
+    """
+    Fills in missing deliveries in the offspring with random positions.
+
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The offspring representation with missing deliveries filled randomly.
+    """
     deliveries_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cd'}
     all_deliveries_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cd'}
 
@@ -184,6 +249,16 @@ def fill_missing_deliveries_with_random(offspring, data):
 
 
 def fill_missing_deliveries(offspring, data):
+    """
+    Fills in missing deliveries in the offspring.
+
+    Args:
+        offspring (list): The offspring representation.
+        data (list): List of data representing each locality.
+
+    Returns:
+        list: The offspring representation with missing deliveries filled.
+    """
     deliveries_by_id = {data[i][0]: i for i in offspring if data[i][1] == 'cd'}
     all_deliveries_by_id = {data[i][0]: i for i in range(len(data)) if data[i][1] == 'cd'}
 
@@ -204,8 +279,14 @@ def fill_missing_deliveries_randomly(offspring, data):
 
 def remove_duplicates(offspring):
     """
-    Remove duplicates of the offspring, only keeping the first occurence
-    of each element. Zeroes are not considered and all zeroes are kept.
+    Removes duplicates from the offspring while keeping the first occurrence of each element.
+    Zeros are not considered, and all zeroes are kept.
+
+    Args:
+        offspring (list): The offspring representation.
+
+    Returns:
+        list: The offspring representation with duplicates removed.
     """
     visited_elements = set()
     result = []

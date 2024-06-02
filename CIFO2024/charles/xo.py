@@ -1,8 +1,6 @@
 import random
-from copy import copy
 from random import randint, sample, uniform
-
-from charles.xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup, repair_routes_random
+from xo_utils import flatten_routes, reconstruct_routes, fill_missing_pickups, fill_missing_deliveries, remove_duplicates, repair_pickup, repair_routes_random
 
 
 def single_point_xo(parent1, parent2):
@@ -72,7 +70,6 @@ def pmx(p1, p2):
         Individuals: Two offspring, resulting from the crossover.
     """
     xo_points = sample(range(len(p1)), 2)
-    #xo_points = [3,6]
     xo_points.sort()
 
     def pmx_offspring(x, y):

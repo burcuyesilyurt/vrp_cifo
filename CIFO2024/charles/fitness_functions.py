@@ -1,10 +1,29 @@
-from utils import euclidean_distance
-from read_data import *
+from CIFO2024.utils import euclidean_distance
+from CIFO2024.read_data import *
 from copy import copy
 
 
 def get_fitness(data, charge):
+    """
+    Calculates the fitness function for the given data and charging stations.
+
+    Args:
+        data (list): List of data representing each locality.
+        charge (list): List of charging stations.
+
+    Returns:
+        function: A fitness function that takes an individual as input and returns its fitness value.
+    """
     def get_overall_fitness(individual):
+        """
+        Calculates the overall fitness of an individual.
+
+        Args:
+            individual: An individual solution representation.
+
+        Returns:
+            float: The overall fitness value of the individual.
+        """
         fitness_time = 0
         number_of_cars_used = len(individual.representation)
         fitness_capacity = 0
@@ -23,6 +42,16 @@ def get_fitness(data, charge):
 
 
 def get_fitness_capacity(route, data):
+    """
+    Calculates the fitness related to the capacity of a route.
+
+    Args:
+        route (list): List of localities in a route.
+        data (list): List of data representing each locality.
+
+    Returns:
+        float: The fitness related to the capacity of the route.
+    """
     car_max_capacity = vehicle_params['Vehicle freight capacity']
     current_route_capacity = 0
     max_capacity = False
@@ -40,6 +69,17 @@ def get_fitness_capacity(route, data):
     
 
 def get_fitness_time(route, data, charging_stations):
+    """
+    Calculates the fitness related to the time for a route.
+
+    Args:
+        route (list): List of localities in a route.
+        data (list): List of data representing each locality.
+        charging_stations (list): List of charging stations.
+
+    Returns:
+        float: The fitness related to the time for the route.
+    """
     # Copy route and inset 0 in the beginning and end of the route,
     # to make calculations easier without any special case
     route = copy(route)

@@ -32,6 +32,16 @@ def fps(population):
 
 
 def tournament_sel(population, tour_size=3):
+    """
+    Performs tournament selection on the population.
+
+    Args:
+        population (Population): The population to select from.
+        tour_size (int, optional): The size of the tournament (default is 3).
+
+    Returns:
+        Individual: The selected individual.
+    """
     tournament = [choice(population) for _ in range(tour_size)]
     if population.optim == "max":
         return max(tournament, key=attrgetter('fitness'))
