@@ -16,7 +16,7 @@ In order to make our data available to the algorithm we have to represent:
 * **SX** = Recharging Stations (where X represents the indexed station);
 * **D1** = Depot (we're considering only one depot for simplicity).
 
-So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[D1,CP1,CP2,CD1,CP3,CD3,CD2,D1]]`, where all routes will start with `D1` followed by the vehicle that will do that route.
+So for instance, one trip of one vehicle, that delivery to customer 1, following by customers 2 and 3 can be represented like `[[CP1,CP2,CD1,CP3,CD3,CD2]]`, where all routes will start with `D1` followed by the vehicle that will do that route.
 The route of the different vehicles is defined by the inner lists, within the main list.
 
 ### Problem premises
@@ -46,12 +46,14 @@ The fitness function takes into account the following variables:
 * Fitness Proportionate Selection.
 
 ## Comments
-We've implemented a random insertion to avoid introducing bias during the creation of the population. However, for introducing some variability and ensuring that information is distributed across the different generations, we've used several crossover and mutation functions. The combination of XX gave a good solution for the problem.
+We've implemented a random insertion to avoid introducing bias during the creation of the population. However, for introducing some variability and ensuring that information is distributed across the different generations, we've used several crossover and mutation functions. The combination of all the techniques used gave a good solution for the problem.
 
 ## External libraries
 * Matplotlib;
 * Numpy;
-* ...
+* Pandas;
+* Seaborn;
+* Chardet.
 
 ## Authors
 | Name             | ID       |

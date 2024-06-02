@@ -1,4 +1,4 @@
-from random import randint, sample, randrange
+from random import sample, randrange
 
 
 def swap_mutation(individual):
