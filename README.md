@@ -31,6 +31,10 @@ The fitness function takes into account the following variables:
 * Battery level - `get_fitness_batery()`;
 * Time - `get_fitness_time()`.
 
+\[ 
+\text{Fitness} = \frac{\sum ((\text{Time} \times 0.3) + (\text{Delay} \times 0.7)) \times \text{Cars}}{1000} + \text{Capacity} 
+\]
+
 ### Mutation
 * `swap_mutation()`;
 * `inversion_mutation()`.
