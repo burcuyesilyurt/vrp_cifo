@@ -15,7 +15,7 @@ In order to make our data available to the algorithm we have to represent:
 * **CDX** = Customer Delivery.
 
 For example: A scenario that uses one vehicle and this car has to deliver to customer 1,2 and 3 can be represented as follows: `[[CP1,CP2,CD1,CP3,CD3,CD2]]`.
-The route of the different vehicles is defined by the inner lists, within the main list. In other words, we have a list, which contains a group of list each represent different cars and its correspondig routes. For example we may have [[CP1, CD1, CP2, CD2], [CP3, CD3]]. Here we have two cars, two different routes, car number is delivering the package to customer 1 and two, and the second car is delivering the packages to customer 3. 
+The route of the different vehicles is defined by the inner lists, within the main list. In other words, we have a list, which contains a group of list each represent different cars and its corresponding routes. For example, we may have `[[CP1, CD1, CP2, CD2], [CP3, CD3]]`. Here we have two cars, two different routes, car number is delivering the package to customer 1 and two, and the second car is delivering the packages to customer 3. 
 
 ### Problem premises
 - All routes must start and end at Depot 1;
