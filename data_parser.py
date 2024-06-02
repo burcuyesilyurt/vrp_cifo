@@ -1,4 +1,4 @@
-FILE_PATH = './c103C6.txt'
+FILE_PATH = './CIFO2024/goeke-2018/c103C6.txt'
 
 data = []
 
