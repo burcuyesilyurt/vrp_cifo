@@ -102,23 +102,6 @@ def pmx(p1, p2):
     return o1, o2
 
 
-def geo_xo(p1,p2):
-    """Implementation of arithmetic crossover/geometric crossover.
-
-    Args:
-        p1 (Individual): First parent for crossover.
-        p2 (Individual): Second parent for crossover.
-
-    Returns:
-        Individual: Offspring, resulting from the crossover.
-    """
-    o = [None] * len(p1)
-    for i in range(len(p1)):
-        r = uniform(0,1)
-        o[i] = p1[i] * r + (1-r) * p2[i]
-    return o
-
-
 def vrp_pmx(parent1, parent2):
 
     # Flatten the routes of both parents

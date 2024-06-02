@@ -22,10 +22,13 @@ if __name__ == "__main__":
     mutation = [swap_mutation, inversion_mutation]
     # Crossover operators
     xo = [
-        (lambda: vrp_xo_random(data, max_vehicles, sequential_constructive_xo), "vrp_xo(sequential_constructive_xo)"),
+        (lambda: sequential_constructive_xo(data), "sequential_constructive_xo"),
         (lambda: vrp_xo(data, max_vehicles, cycle_xo), "vrp_xo(cycle_xo)"),
         (lambda: vrp_xo(data, max_vehicles, pmx), "vrp_xo(pmx)"),
-        (lambda: vrp_xo_random(data, max_vehicles, single_point_xo), "vrp_xo(single_point_xo)"),
+        (lambda: vrp_xo(data, max_vehicles, single_point_xo), "vrp_xo(single_point_xo)"),
+        (lambda: vrp_xo_random(data, max_vehicles, cycle_xo), "vrp_xo_random(cycle_xo)"),
+        (lambda: vrp_xo_random(data, max_vehicles, pmx), "vrp_xo_random(pmx)"),
+        (lambda: vrp_xo_random(data, max_vehicles, single_point_xo), "vrp_xo_random(single_point_xo)")
         ]
     # Selection operators
     selection = [fps, tournament_sel]
