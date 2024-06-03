@@ -55,6 +55,7 @@ The fitness function takes into account the following variables:
 ![](CIFO2024/images/ExampleRoutes.jpg)
 
 ### Results
+![](CIFO2024/images/output_results.png)
 Our implementation results were evaluated across various configurations. We conducted 100 generations and 20 iterations for each configuration, calculating the median of the best fitness values over multiple runs. To provide a comprehensive analysis, we compared our results on two different instances: one with 106 pickup or delivery locations and another with 16 locations. The configurations that performed best included tournament selection, single-point random crossover, and swap mutation, enhanced with elitism.
 
 ## Comments
