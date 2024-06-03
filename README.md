@@ -33,8 +33,8 @@ The fitness function takes into account the following variables:
 
 
 ![](CIFO2024/images/equation.png)
-
-
+![](CIFO2024/images/euclidean.png)
+![](CIFO2024/images/details.png)
 
 ### Mutation
 * `swap_mutation()`;
