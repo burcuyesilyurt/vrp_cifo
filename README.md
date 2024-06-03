@@ -34,6 +34,8 @@ The fitness function takes into account the following variables:
 
 ![](CIFO2024/images/equation.png)
 
+
+
 ### Mutation
 * `swap_mutation()`;
 * `inversion_mutation()`.
@@ -47,6 +49,10 @@ The fitness function takes into account the following variables:
 ### Selection
 * Tournament Selection;
 * Fitness Proportionate Selection.
+
+### Example of the routes, giving in a solution:
+
+![](CIFO2024/images/ExampleRoutes.jpg)
 
 ## Comments
 We've implemented a random insertion to avoid introducing bias during the creation of the population. However, for introducing some variability and ensuring that information is distributed across the different generations, we've used several crossover and mutation functions. The combination of all the techniques used gave a good solution for the problem.
