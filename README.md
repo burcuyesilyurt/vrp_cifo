@@ -9,6 +9,23 @@ This project tries to solve the optimization problem of the vrp, with genetic al
 * Recharging stations;
 * Depot.
 
+### DataSet
+
+Each row of the dataset contains the following columns:
+* **StringId**: Unique identifier of the location;
+* **Type**: Indicates the function of the location, where:
+  * **D**: depot;
+  * **F**: recharging station;
+  * **CP**: customer pickup location;
+  * **CD**: customer delivery location.
+* **X, Y**: Location coordinates (distances are assumed to be Euclidean);
+* **Demand**: Specifies the quantity of freight capacity required (positive at pickup, negative at delivery);
+* **ReadyTime and DueDate**: beginning and end of the time window (waiting is allowed);
+* **ServiceTime**: denotes the entire time spent at pickup/delivery for loading/unloading operations;
+* **PartnerId**: Relevant for transportation requests and provides the StringId of the partner of each pickup and delivery location.
+
+* Besides the locations, the dataset also contains information about the vehicle, such as velocity, freight capacity, and battery capacity.
+
 ### Representation
 In order to make our data available to the algorithm we have to represent:
 * **CPX** = Customers Pickup (where X represents the indexed customer);
