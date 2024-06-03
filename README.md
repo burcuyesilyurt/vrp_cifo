@@ -77,4 +77,6 @@ We've implemented a random insertion to avoid introducing bias during the creati
 ## References
 * Rahmat, R. W., & Zaharuddin, W. M. (2013). Solving the Vehicle Routing Problem using Genetic Algorithm. 
 * Toth, P., & Vigo, D. (2002). An overview of vehicle routing problems. European Journal of Operational Research, 144(3), 465-474.
-* Keskin, M., & Çatay, B. (2018). The electric vehicle routing problem with time windows and recharging stations. Transportation Research Part C: Emerging Technologies, 87, 113-137. 
+* Keskin, M., & Çatay, B. (2018). The electric vehicle routing problem with time windows and recharging stations. Transportation Research Part C: Emerging Technologies, 87, 113-137.
+* Michael Schneider, Andreas Stenger, Dominik Goeke (2012). The Electric Vehicle Routing Problem with Time Windows and Recharging Stations.
+* Goeke 2018 dataset: http://www.vrp-rep.org/datasets/item/2019-0001.html
