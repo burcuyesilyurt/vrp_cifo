@@ -2,6 +2,25 @@
 ## Vehicle Routing Problem (vrp)
 This project tries to solve the optimization problem of the vrp, with genetic algorithms. The goal is to minimize the distance made by the car and the number of cars been used, while making the delivers for all the packages, while considering certain constraints.
 
+## Executing the code:
+We found that depending of the version use or if you use pycharm or visual studio an error will appear.
+
+If you get the following error: 
+* ModuleNotFoundError: No module named 'CIFO2024', in the imports you have to delete CIFO2024 an example:
+  * Change:
+  * from CIFO2024.charles.fitness_functions import get_fitness
+  * To:
+  * from charles.fitness_functions import get_fitness
+
+Then if the following error appears: 
+* FileNotFoundError: [Errno 2] No such file or directory: '.\\goeke-2018\\c202C16.txt'
+  * Then on \vrp_cifo\CIFO2024\read_data.py"
+  * change on line 6 file_path = os.path.join('.', 'goeke-2018',instance) to
+  * file_path = os.path.join('CIFO2024', 'goeke-2018',instance)
+  * If it does not work try the following:
+  * file_path = os.path.join('vrp_cifo\CIFO2024', 'goeke-2018',instance)
+
+
 ## Problem definition
 ### Entities
 * Vehicles;
