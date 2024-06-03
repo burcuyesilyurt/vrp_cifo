@@ -3,7 +3,7 @@
 This project tries to solve the optimization problem of the vrp, with genetic algorithms. The goal is to minimize the distance made by the car and the number of cars been used, while making the delivers for all the packages, while considering certain constraints.
 
 ## Executing the code:
-We found that depending of the version use or if you use pycharm or visual studio an error will appear.
+We found that depending of the version use or if you use pycharm or visual studio an error may appear.
 
 If you get the following error: 
 * ModuleNotFoundError: No module named 'CIFO2024', in the imports you have to delete CIFO2024 an example:
